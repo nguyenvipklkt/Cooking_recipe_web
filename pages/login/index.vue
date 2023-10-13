@@ -11,10 +11,14 @@
         <div
           class="w-100 vh-100 d-flex justify-content-center align-items-center"
         >
-          <form action="">
+          <form action="" v-on:submit.prevent="login()">
             <div class="d-flex justify-content-between">
               <div></div>
-              <NuxtLink :to="{path : '/signup'}" class="btn-sign-up p-2 text-decoration-none">Signup for free</NuxtLink>
+              <NuxtLink
+                :to="{ path: '/signup' }"
+                class="btn-sign-up p-2 text-decoration-none"
+                >Signup for free</NuxtLink
+              >
             </div>
             <div
               class="d-flex justify-content-center my-3"
@@ -33,16 +37,20 @@
                 type="email"
                 class="form-control"
                 id="exampleInputEmail1"
-                  placeholder="Email"
+                placeholder="Email"
                 aria-describedby="emailHelp"
+                v-model="email"
+                required
               />
             </div>
             <div class="mb-3">
               <input
                 type="password"
                 class="form-control"
-                  placeholder="Password"
+                placeholder="Password"
                 id="exampleInputPassword1"
+                v-model="password"
+                required
               />
             </div>
             <div class="mb-3 form-check">
@@ -63,10 +71,10 @@
                 Let's explore the world of food
               </button>
             </div>
-            <div class="mt-3 mb-4">
+            <!-- <div class="mt-3 mb-4">
               <div class="border-top"></div>
-            </div>
-            <div class="w-100 d-flex justify-content-center mb-3">
+            </div> -->
+            <!-- <div class="w-100 d-flex justify-content-center mb-3">
               <div class="col-12">
                 <a href="#" class="d-flex text-decoration-none">
                   <img
@@ -87,8 +95,8 @@
                   </div>
                 </a>
               </div>
-            </div>
-            <div class="w-100 d-flex justify-content-center">
+            </div> -->
+            <!-- <div class="w-100 d-flex justify-content-center">
               <div class="col-12">
                 <a href="#" class="d-flex text-decoration-none">
                   <img
@@ -109,7 +117,7 @@
                   </div>
                 </a>
               </div>
-            </div>
+            </div> -->
           </form>
         </div>
       </div>
@@ -121,6 +129,48 @@
 definePageMeta({
   layout: "noneLayout",
 });
+import CookingRecipeAxios from "~/mixins/cooking-recipe-axios";
+export default {
+  mixins: [CookingRecipeAxios],
+  components: {},
+  async beforeMount() {},
+
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    async login() {
+      const loginRequest = {
+        email: this.email,
+        password: this.password,
+      };
+
+      var data = await this.Post(
+        "api/UserAuthenticate/UserLogin",
+        loginRequest
+      );
+      if (data.code == "Ok") {
+        //save data to cookie
+        const d = new Date();
+        d.setTime(d.getTime() + 1 * 24 * 60 * 60 * 1000);
+        let expires = "expires=" + d.toUTCString();
+        document.cookie =
+          "cooking-recipe-token" +
+          "=" +
+          data.data.token +
+          ";" +
+          expires +
+          ";path=/";
+        this.$router.push({ path: "/" });
+      } else {
+        alert(data.des);
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
