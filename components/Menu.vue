@@ -1,9 +1,9 @@
 <template>
   <div
-    class="w-100 d-flex justify-content-between"
-    style="width: 50px; background-color: #fff"
+    class="w-100 d-flex justify-content-center p-2 h4"
+    style="font-family: Florence, cursive; color: #e6bb00"
   >
-    Menu
+    <div>today's dish</div>
   </div>
 </template>
 

@@ -35,7 +35,9 @@ const CookingRecipeAxios = {
         });
         return response.data;
       } catch (error) {
-        console.log(error);
+        this.$toast.error(`${error}`, {
+          autoClose: 1000,
+        });
         return;
       }
     },
@@ -52,7 +54,9 @@ const CookingRecipeAxios = {
         });
         return response.data;
       } catch (error) {
-        console.log(error);
+        this.$toast.error(`${error}`, {
+          autoClose: 1000,
+        });
         return;
       }
     },
@@ -69,7 +73,9 @@ const CookingRecipeAxios = {
         });
         return response.data;
       } catch (error) {
-        console.log(error);
+        this.$toast.success(`${error}`, {
+          autoClose: 1000,
+        });
         return;
       }
     },
@@ -86,7 +92,9 @@ const CookingRecipeAxios = {
         });
         return response.data;
       } catch (error) {
-        console.log(error);
+        this.$toast.error(`${error}`, {
+          autoClose: 1000,
+        });
         return;
       }
     },
@@ -103,7 +111,9 @@ const CookingRecipeAxios = {
         });
         return response.data;
       } catch (error) {
-        console.log(error);
+        this.$toast.error(`${error}`, {
+          autoClose: 1000,
+        });
         return;
       }
     },
@@ -120,7 +130,9 @@ const CookingRecipeAxios = {
         });
         return response.data;
       } catch (error) {
-        console.log(error);
+        this.$toast.error(`${error}`, {
+          autoClose: 1000,
+        });
         return;
       }
     },

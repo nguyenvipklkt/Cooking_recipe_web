@@ -12,23 +12,23 @@
           class="w-100 vh-100 d-flex justify-content-center align-items-center"
         >
           <form action="" v-on:submit.prevent="login()">
-            <div class="d-flex justify-content-between">
+            <!-- <div class="d-flex justify-content-between">
               <div></div>
               <NuxtLink
                 :to="{ path: '/signup' }"
                 class="btn-sign-up p-2 text-decoration-none"
                 >Signup for free</NuxtLink
               >
-            </div>
+            </div> -->
             <div
               class="d-flex justify-content-center my-3"
-              style="font-size: 25px; font-weight: 530"
+              style="font-size: 25px; font-weight: 540; color: #be895b"
             >
               Cooking - Socializing and sharing
             </div>
             <div
               class="d-flex justify-content-center mb-3"
-              style="font-size: 22px; font-weight: 540"
+              style="font-size: 22px; font-weight: 500"
             >
               Login
             </div>
@@ -71,9 +71,14 @@
                 Let's explore the world of food
               </button>
             </div>
-            <!-- <div class="mt-3 mb-4">
+            <div class="my-4">
               <div class="border-top"></div>
-            </div> -->
+            </div>
+            <div class="d-flex justify-content-center" style="font-size: 17px">
+              <NuxtLink :to="{ path: '/signup' }"
+                >Do not have an account ? Please register!</NuxtLink
+              >
+            </div>
             <!-- <div class="w-100 d-flex justify-content-center mb-3">
               <div class="col-12">
                 <a href="#" class="d-flex text-decoration-none">
@@ -164,9 +169,17 @@ export default {
           ";" +
           expires +
           ";path=/";
-        this.$router.push({ path: "/" });
+        this.$toast.success("Login successfull !", {
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          this.$router.push({ path: "/" });
+        }, 1000);
       } else {
-        alert(data.des);
+        // alert(data.des);
+        this.$toast.error(`${data.des}`, {
+          autoClose: 1000,
+        });
       }
     },
   },
@@ -189,5 +202,9 @@ export default {
   border-radius: 8px;
   font-size: 18px;
   background-color: #dcc0a8;
+}
+
+.btn-login:hover {
+  background-color: #d3b092;
 }
 </style>

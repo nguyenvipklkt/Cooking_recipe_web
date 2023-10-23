@@ -6,10 +6,14 @@
         class="d-none d-lg-block col-3 p-2"
         style="height: calc(100vh - 70px)"
       >
-        <div class="w-100 h-100 bg-white" style="border-radius: 10px"></div>
+        <div class="w-100 h-100 bg-white" style="border-radius: 10px">
+          <Menu></Menu>
+        </div>
       </div>
       <div class="col-12 col-lg-9 p-2" style="height: calc(100vh - 70px)">
-        <div class="w-100 h-100 bg-white" style="border-radius: 10px"></div>
+        <div class="w-100 h-100 bg-white" style="border-radius: 10px">
+          <slot></slot>
+        </div>
       </div>
     </div>
   </div>
