@@ -21,6 +21,9 @@ const Utility = {
       var mydate = new Date(stringDate);
       return mydate.toDateString();
     },
+    formatImage(img) {
+      return "https://localhost:50270/" + img;
+    },
   },
 };
 

@@ -63,7 +63,9 @@
                 <label class="form-check-label" for="exampleCheck1"
                   >Stay logged in</label
                 >
-                <div>Forgot password ?</div>
+                <NuxtLink :to="{ path: '/forgot-password' }"
+                  >Forgot password ?</NuxtLink
+                >
               </div>
             </div>
             <div class="d-flex justify-content-center">
@@ -127,6 +129,25 @@
         </div>
       </div>
     </div>
+    <div v-if="loading" class="loading-customer p-0">
+      <div class="w-100 row">
+        <div class="col-7 p-0 d-none d-lg-block"></div>
+        <div class="col-12 col-lg-5 p-0">
+          <div
+            class="w-100 vh-100 d-flex justify-content-center align-items-center"
+            style="background-color: rgba(0, 0, 0, 0.3)"
+          >
+            <div
+              class="spinner-border text-warning"
+              role="status"
+              style="width: 50px; height: 50px; font-size: 20px"
+            >
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -144,10 +165,12 @@ export default {
     return {
       email: "",
       password: "",
+      loading: false,
     };
   },
   methods: {
     async login() {
+      this.loading = true;
       const loginRequest = {
         email: this.email,
         password: this.password,
@@ -169,6 +192,7 @@ export default {
           ";" +
           expires +
           ";path=/";
+        this.loading = false;
         this.$toast.success("Login successfull !", {
           autoClose: 1000,
         });
@@ -177,6 +201,8 @@ export default {
         }, 1000);
       } else {
         // alert(data.des);
+        this.loading = false;
+
         this.$toast.error(`${data.des}`, {
           autoClose: 1000,
         });
@@ -206,5 +232,12 @@ export default {
 
 .btn-login:hover {
   background-color: #d3b092;
+}
+.loading-customer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 </style>

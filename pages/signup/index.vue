@@ -66,7 +66,7 @@
                 required
               />
             </div>
-            <div class="mb-3">
+            <div class="mb-4">
               <input
                 type="password"
                 class="form-control"
@@ -76,7 +76,7 @@
                 required
               />
             </div>
-            <div class="mb-3 form-check">
+            <!-- <div class="mb-3 form-check">
               <input
                 type="checkbox"
                 class="form-check-input"
@@ -88,7 +88,7 @@
                 >
                 <div>Forgot password ?</div>
               </div>
-            </div>
+            </div> -->
             <div class="d-flex justify-content-center">
               <button type="submit" class="btn-login p-2 mb-2">
                 Create account
@@ -199,7 +199,9 @@ export default {
         this.$toast.success("Signup successfull !", {
           autoClose: 1000,
         });
-        this.$router.push({ path: "/" });
+        setTimeout(() => {
+          this.$router.push({ path: "/" });
+        }, 1000);
       } else {
         alert(data.des);
         this.$toast.error(`${data.des}`, {

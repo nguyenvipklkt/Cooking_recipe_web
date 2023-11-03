@@ -28,190 +28,33 @@
       style="background-color: #ffeede; border-radius: 12px"
     >
       <div>
-        <font-awesome-icon class="icon-main-header" icon="fa-solid fa-house" />
+        <NuxtLink :to="{ path: '/' }">
+          <font-awesome-icon
+            class="icon-main-header"
+            icon="fa-solid fa-house"
+          />
+        </NuxtLink>
       </div>
       <div>
-        <font-awesome-icon
-          class="icon-main-header"
-          icon="fa-solid fa-user-group"
-        />
+        <NuxtLink :to="{}"
+          ><font-awesome-icon
+            class="icon-main-header"
+            icon="fa-solid fa-user-group"
+        /></NuxtLink>
       </div>
       <div>
-        <font-awesome-icon class="icon-main-header" icon="fa-solid fa-tv" />
+        <NuxtLink :to="{ path: '/profile' }"
+          ><font-awesome-icon class="icon-main-header" icon="fa-solid fa-user"
+        /></NuxtLink>
       </div>
     </div>
     <div class="d-flex align-items-center">
       <div>
         <font-awesome-icon
           class="logout-icon"
-          icon="fa-solid fa-user"
+          icon="fa-solid fa-gear"
           @click="account_click"
         />
-      </div>
-    </div>
-  </div>
-  <!-- <div
-    class="w-100 d-flex justify-content-between"
-    style="
-      height: 70px;
-      background-color: #ffeede;
-      padding: 0 12px;
-      font-family: Florence, cursive;
-    "
-  >
-    <div style="width: 30%; height: 100%; background-color: red"></div>
-    <div style="width: 60%; height: 100%; background-color: red"></div>
-  </div> -->
-  <!-- <div
-    class="w-100 d-flex"
-    style="
-      height: 70px;
-      background-color: #ffeede;
-      padding: 0 12px;
-      font-family: Florence, cursive;
-    "
-  >
-    <div
-      class="d-none d-lg-flex py-1 align-items-center me-3"
-      style="width: 215px; min-height: 100%"
-    >
-      <img src="/favicon.ico" alt="" style="height: 100%" />
-      <div style="width: 5px"></div>
-      <div>
-        <div style="font-size: 15px; padding: 0">Cooking</div>
-        <div style="font-size: 12px; padding: 0">Socializing & Sharing</div>
-      </div>
-    </div>
-    <div class="d-flex d-lg-none align-items-center me-3">
-      <font-awesome-icon icon="fa-solid fa-bars" style="width: 100px" />
-    </div>
-    <div class="d-flex justyfy-content-center align-items-center">
-      <div style="height: 34px" class="search d-flex">
-        <input type="text" class="search-input" placeholder=" Search..." />
-        <font-awesome-icon
-          icon="fa-solid fa-magnifying-glass"
-          class="glass-icon"
-        />
-      </div>
-    </div>
-    <div style="width: 100px"></div>
-    <div
-      class="align-items-center d-none d-lg-flex"
-      style="background-color: #fff; padding: 23px"
-    >
-      <div>
-        <font-awesome-icon style="width: 100px" icon="fa-solid fa-house" />
-      </div>
-      <div style="width: 100px"></div>
-      <div>
-        <font-awesome-icon style="width: 100px" icon="fa-solid fa-user-group" />
-      </div>
-      <div style="width: 100px"></div>
-      <div>
-        <font-awesome-icon style="width: 100px" icon="fa-solid fa-user" />
-      </div>
-    </div>
-    <div class="d-flex align-items-center">
-      <div>
-        <font-awesome-icon
-          style="width: 100px"
-          icon="fa-solid fa-right-from-bracket"
-        />
-      </div>
-    </div>
-  </div> -->
-  <!-- modal profile  -->
-  <div v-if="isOpenAccountModal" class="account-modal">
-    <div class="vh-100 w-100">
-      <div class="w-100 d-flex">
-        <div
-          @click="account_click"
-          style="height: 100vh; width: calc(100% - 414px)"
-        ></div>
-        <div
-          class="account-container p-2"
-          style="width: 414px; height: 100vh; background-color: #ffeede"
-        >
-          <div class="d-flex w-100 justify-content-between">
-            <div></div>
-            <div @click="account_click">
-              <font-awesome-icon
-                icon="fa-solid fa-xmark"
-                style="font-size: 20px; cursor: pointer"
-              />
-            </div>
-          </div>
-          <div
-            class="h3 d-flex justify-content-center mb-4"
-            style="font-family: Florence, cursive; color: #e6bb00"
-          >
-            Cooking profile
-          </div>
-          <div class="d-flex justify-content-center">
-            <div>
-              <div class="d-flex mb-4">
-                <div class="ms-2 me-4">
-                  <img
-                    src="https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj"
-                    alt="avatar"
-                    style="border-radius: 100%; width: 100px"
-                  />
-                </div>
-                <div class="align-items-center justify-content-center d-flex">
-                  <div class="">
-                    <div class="h4 mb-1" style="font-family: Florence, cursive">
-                      {{ profile.firstName }}
-                    </div>
-                    <div style="font-family: Florence, cursive">5 contacts</div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="d-flex mx-3 mb-4 py-1 justify-content-center"
-                style="
-                  border: 2px solid #000;
-                  height: 70px;
-                  font-size: 15px;
-                  font-family: Florence, cursive;
-                "
-              >
-                title...
-              </div>
-              <div class="d-flex w-100 mb-4 mx-2">
-                <div
-                  class=""
-                  style="font-size: 17px; font-family: Florence, cursive"
-                >
-                  <div class="my-3">
-                    Name : {{ profile.firstName + profile.lastName }}
-                  </div>
-                  <div class="my-3">
-                    Birthday : {{ formatDate(profile.birthday) }}
-                  </div>
-                  <div class="my-3">Email : {{ profile.email }}</div>
-                  <div class="my-3">Address : {{ profile.address }}</div>
-                  <div class="my-3">Number of post : 0</div>
-                </div>
-              </div>
-              <div class="w-100 mb-3 justify-content-center d-flex" style="">
-                <div class="">
-                  <button class="mx-3 btn-update-profile">
-                    Update profile
-                  </button>
-                  <button class="mx-3 btn-change-password">
-                    Change password
-                  </button>
-                </div>
-              </div>
-              <div class="d-flex m-3">
-                <button class="btn-update-profile" @click="logout">
-                  <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
-                  Logout
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -231,11 +74,23 @@ export default {
     return {
       isOpenAccountModal: false,
       profile: [],
+      isOpenChangeProfile: true,
+      modelUser: {
+        firstName: "",
+        lastName: "",
+        title: "",
+        phoneNumber: "",
+        birthday: "",
+      },
     };
   },
   methods: {
     account_click() {
       this.isOpenAccountModal = !this.isOpenAccountModal;
+      this.isOpenChangeProfile = true;
+    },
+    change_profile_click() {
+      this.isOpenChangeProfile = false;
     },
     async logout() {
       this.deleteAllLocalStorages();
@@ -246,10 +101,39 @@ export default {
       var data = await this.Get("api/Account/GetProfile", {});
       if (data.code == "Ok") {
         this.profile = data.data;
+        localStorage.setItem("user", JSON.stringify(this.profile));
       } else {
         this.$toast.error(`${data.des}`, {
           autoClose: 1000,
         });
+      }
+    },
+    async updateProfile() {
+      const formData = new FormData();
+      formData.append("title", this.modelUser.title);
+      formData.append("firstName", this.modelUser.firstName);
+      formData.append("lastName", this.modelUser.lastName);
+      formData.append("phoneNumber", this.modelUser.phoneNumber);
+      formData.append("birthday", this.modelUser.birthday);
+      const response = await this.Put("api/Account/UpdateProfile", formData);
+      if (response.code == "Ok") {
+        this.$toast.success("Change information successfull !", {
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          reloadNuxtApp();
+        }, 1000);
+      } else {
+        this.$toast.error("Change information fail !", {
+          autoClose: 2000,
+        });
+      }
+    },
+    formatTitle(abc) {
+      if (abc == "") {
+        return `This guy is so lazy, he doesn't write anything`;
+      } else {
+        return abc;
       }
     },
   },
@@ -343,4 +227,6 @@ export default {
 .modal-backdrop.show {
   display: none;
 }
+
+/* modal */
 </style>
