@@ -103,7 +103,7 @@
             <div class="col-12 col-xl-8">
               <div class="w-100 h-100 bg-white" style="border-radius: 10px">
                 <div style="height: 20px"></div>
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center mb-4">
                   <img
                     class="me-2"
                     :src="[formatImage(profile.avatar)]"
@@ -112,6 +112,86 @@
                   />
                   <div class="btn-what-do-you-think">What do you think ?</div>
                 </div>
+                <div v-for="story in stories">
+                  <div
+                    class="d-flex justify-content-center mb-4"
+                    style="color: #be895b"
+                  >
+                    <div
+                      class="p-3"
+                      style="
+                        background-color: #fff2e6;
+                        width: 700px;
+                        border-radius: 8px;
+                      "
+                    >
+                      <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                          <img
+                            class="me-2"
+                            :src="[formatImage(profile.avatar)]"
+                            alt=""
+                            style="width: 55px; border-radius: 50%"
+                          />
+                          <div>
+                            <div style="font-size: 18px; font-weight: 500">
+                              {{ profile.firstName + " " + profile.lastName }}
+                            </div>
+                            <div style="font-size: 15px">
+                              {{ countDate(story.createdDate) }}
+                            </div>
+                          </div>
+                        </div>
+                        <div style="font-size: 25px">
+                          <font-awesome-icon
+                            icon="fa-solid fa-ellipsis-vertical"
+                          />
+                        </div>
+                      </div>
+                      <div
+                        class="d-flex justify-content-center mb-2"
+                        style="font-size: 28px; font-weight: 500"
+                      >
+                        {{ story.name }}
+                      </div>
+                      <div class="d-flex justify-content-center mb-2">
+                        <img
+                          :src="[formatImage(story.thumbnails)]"
+                          alt=""
+                          style="width: 300px; border: 5px solid #fff"
+                        />
+                      </div>
+                      <div
+                        class="d-flex justify-content-center"
+                        style="text-align: center; font-size: 16px"
+                      >
+                        {{ story.title }}
+                      </div>
+                      <hr />
+                      <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                          <div class="me-2">
+                            <font-awesome-icon icon="fa-solid fa-heart" />
+                          </div>
+                          {{ story.likeNumber + " Like" }}
+                        </div>
+                        <div class="d-flex">
+                          <div class="me-2">
+                            <font-awesome-icon icon="fa-solid fa-comment" />
+                          </div>
+                          Comment
+                        </div>
+                        <div class="d-flex">
+                          <div class="me-2">
+                            <font-awesome-icon icon="fa-solid fa-share" />
+                          </div>
+                          {{ story.shareNumber + " Share" }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div style="height: 50px"></div>
               </div>
             </div>
           </div>
@@ -230,6 +310,7 @@ export default {
     await this.getProfile();
     await this.getFollow();
     await this.getFollower();
+    await this.getFoodList();
   },
 
   data() {
@@ -248,6 +329,7 @@ export default {
       },
       fileA: [],
       fileB: [],
+      stories: [],
     };
   },
   methods: {
@@ -323,6 +405,17 @@ export default {
     },
     openModal() {
       this.isOpenModal = !this.isOpenModal;
+    },
+    async getFoodList() {
+      var data = await this.Get("api/Food/GetFoodList", {});
+      if (data.code == "Ok") {
+        // this.stories = JSON.stringify(data.data);
+        this.stories = data.data;
+      } else {
+        this.$toast.error(`${data.des}`, {
+          autoClose: 1000,
+        });
+      }
     },
   },
 };

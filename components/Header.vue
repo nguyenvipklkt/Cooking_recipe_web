@@ -49,12 +49,13 @@
       </div>
     </div>
     <div class="d-flex align-items-center">
-      <div>
-        <font-awesome-icon
-          class="logout-icon"
-          icon="fa-solid fa-gear"
-          @click="account_click"
-        />
+      <div class="dropdown" style="float: right">
+        <div class="icon-main-setting">
+          <font-awesome-icon icon="fa-solid fa-gear" />
+        </div>
+        <div class="dropdown-content">
+          <a href="#" @click="logout()">Logout</a>
+        </div>
       </div>
     </div>
   </div>
@@ -85,13 +86,6 @@ export default {
     };
   },
   methods: {
-    account_click() {
-      this.isOpenAccountModal = !this.isOpenAccountModal;
-      this.isOpenChangeProfile = true;
-    },
-    change_profile_click() {
-      this.isOpenChangeProfile = false;
-    },
     async logout() {
       this.deleteAllLocalStorages();
       this.deleteAllCookies();
@@ -106,34 +100,6 @@ export default {
         this.$toast.error(`${data.des}`, {
           autoClose: 1000,
         });
-      }
-    },
-    async updateProfile() {
-      const formData = new FormData();
-      formData.append("title", this.modelUser.title);
-      formData.append("firstName", this.modelUser.firstName);
-      formData.append("lastName", this.modelUser.lastName);
-      formData.append("phoneNumber", this.modelUser.phoneNumber);
-      formData.append("birthday", this.modelUser.birthday);
-      const response = await this.Put("api/Account/UpdateProfile", formData);
-      if (response.code == "Ok") {
-        this.$toast.success("Change information successfull !", {
-          autoClose: 1000,
-        });
-        setTimeout(() => {
-          reloadNuxtApp();
-        }, 1000);
-      } else {
-        this.$toast.error("Change information fail !", {
-          autoClose: 2000,
-        });
-      }
-    },
-    formatTitle(abc) {
-      if (abc == "") {
-        return `This guy is so lazy, he doesn't write anything`;
-      } else {
-        return abc;
       }
     },
   },
@@ -223,10 +189,43 @@ export default {
   color: #fbf3cf;
   background-color: #e6bb00;
 }
-
-.modal-backdrop.show {
-  display: none;
+.dropdown {
+  position: relative;
+  display: inline-block;
 }
 
-/* modal */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.icon-main-setting {
+  padding: 23px 30px;
+}
+
+.icon-main-setting:hover {
+  background-color: #d9d9d9;
+  border-radius: 12px;
+  cursor: pointer;
+}
 </style>
