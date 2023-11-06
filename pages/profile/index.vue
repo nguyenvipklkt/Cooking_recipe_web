@@ -4,7 +4,7 @@
       <div style="padding: 0 6%">
         <div class="w-100">
           <div
-            :style="{ backgroundImage: formatImage(profile.cover) }"
+            :style="'background-image: url(' + formatImage(profile.cover) + ')'"
             style="
               z-index: 1;
               background-size: cover;
@@ -35,6 +35,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                   <div class="h6">{{ follow.length + " Follows" }}</div>
+                  <div style="width: 40px"></div>
                   <div class="h6">{{ follower.length + " Followers" }}</div>
                 </div>
               </div>
@@ -137,7 +138,7 @@
             <div style="font-size: 17px">Cover :</div>
             <VueFileAgent
               :uploadUrl="uploadUrl"
-              v-model="modelUser.cover"
+              v-model:raw-model-value="fileA"
             ></VueFileAgent>
           </div>
           <div
@@ -147,7 +148,7 @@
             <div style="font-size: 17px">Avatar :</div>
             <VueFileAgent
               :uploadUrl="uploadUrl"
-              v-model="modelUser.avatar"
+              v-model:raw-model-value="fileB"
             ></VueFileAgent>
           </div>
           <textarea
@@ -238,8 +239,6 @@ export default {
       follower: [],
       profile: [],
       modelUser: {
-        avatar: "",
-        cover: null,
         firstName: "",
         lastName: "",
         title: "",
@@ -247,6 +246,8 @@ export default {
         birthday: "",
         address: "",
       },
+      fileA: [],
+      fileB: [],
     };
   },
   methods: {
@@ -255,6 +256,9 @@ export default {
       if (data.code == "Ok") {
         this.profile = data.data;
         localStorage.setItem("user", JSON.stringify(this.profile));
+        this.modelUser = this.profile;
+        this.fileB[0] = this.convertUrlToFile(this.profile.avatar);
+        this.fileA[0] = this.convertUrlToFile(this.profile.cover);
       } else {
         this.$toast.error(`${data.des}`, {
           autoClose: 1000,
@@ -263,17 +267,18 @@ export default {
     },
     async updateProfile() {
       const formData = new FormData();
-      const blobAvatar = new Blob([this.modelUser.avatar]);
-      const blobCover = new Blob([this.modelUser.cover]);
-      formData.append("avatar", blobAvatar, this.modelUser.avatar.FileName);
-      formData.append("cover", blobCover, this.modelUser.cover.FileName);
+      formData.append("avatar", this.fileB[0].file, this.fileB[0].file.name);
+      formData.append("cover", this.fileA[0].file, this.fileA[0].file.name);
       formData.append("title", this.modelUser.title);
       formData.append("firstName", this.modelUser.firstName);
       formData.append("lastName", this.modelUser.lastName);
       formData.append("phoneNumber", this.modelUser.phoneNumber);
       formData.append("address", this.modelUser.address);
       formData.append("birthday", this.modelUser.birthday);
-      const response = await this.Put("api/Account/UpdateProfile", formData);
+      const response = await this.PutFormData(
+        "api/Account/UpdateProfile",
+        formData
+      );
       if (response.code == "Ok") {
         this.$toast.success("Change information successfull !", {
           autoClose: 1000,

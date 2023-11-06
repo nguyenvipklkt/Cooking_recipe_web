@@ -22,7 +22,21 @@ const Utility = {
       return mydate.toDateString();
     },
     formatImage(img) {
-      return "https://localhost:50270/" + img;
+      const config = useRuntimeConfig();
+      return config.public.BaseUrl + img;
+    },
+    convertUrlToFile(path) {
+      const urlImage = this.formatImage(path);
+      const file = new File([urlImage], urlImage, { type: "image/png" });
+      console.log(file);
+      const obj = {
+        name: path,
+        type: "image/*",
+        ext: "*",
+        file: file,
+        url: urlImage,
+      };
+      return obj;
     },
   },
 };
