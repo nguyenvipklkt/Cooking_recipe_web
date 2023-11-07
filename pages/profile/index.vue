@@ -34,9 +34,9 @@
                   {{ profile.firstName + " " + profile.lastName }}
                 </div>
                 <div class="d-flex justify-content-between">
-                  <div class="h6">{{ follow.length + " Follows" }}</div>
+                  <div class="h6">{{ follow.length + " Đang theo dõi" }}</div>
                   <div style="width: 40px"></div>
-                  <div class="h6">{{ follower.length + " Followers" }}</div>
+                  <div class="h6">{{ follower.length + " Đã theo dõi" }}</div>
                 </div>
               </div>
             </div>
@@ -47,9 +47,13 @@
           >
             <div>
               <div class="d-flex">
-                <button class="me-4 py-2 px-3 btn-new-post">New post</button>
+                <NuxtLink
+                  :to="{ path: '/post-story' }"
+                  class="me-4 py-2 px-3 btn-new-post text-decoration-none user-select-none"
+                  >Bài viết mới</NuxtLink
+                >
                 <button class="px-4 py-2 btn-edit-profile" @click="openModal()">
-                  Edit profile
+                  Chỉnh sửa trang cá nhân
                 </button>
               </div>
             </div>
@@ -76,7 +80,7 @@
                       <div class="me-2">
                         <font-awesome-icon icon="fa-solid fa-cake-candles" />
                       </div>
-                      <div>Birthday : {{ formatDate(profile.birthday) }}</div>
+                      <div>Sinh nhật : {{ formatDate(profile.birthday) }}</div>
                     </div>
                     <div class="my-3 d-flex">
                       <div class="me-2">
@@ -88,13 +92,13 @@
                       <div class="me-2">
                         <font-awesome-icon icon="fa-solid fa-phone" />
                       </div>
-                      <div>Phone number : {{ profile.phoneNumber }}</div>
+                      <div>Số điện thoại : {{ profile.phoneNumber }}</div>
                     </div>
                     <div class="my-3 d-flex">
                       <div class="me-2">
                         <font-awesome-icon icon="fa-solid fa-location-dot" />
                       </div>
-                      <div>Address : {{ profile.address }}</div>
+                      <div>Địa chỉ : {{ profile.address }}</div>
                     </div>
                   </div>
                 </div>
@@ -110,7 +114,13 @@
                     alt=""
                     style="width: 45px; border-radius: 50%"
                   />
-                  <div class="btn-what-do-you-think">What do you think ?</div>
+                  <NuxtLink
+                    :to="{ path: '/post-story' }"
+                    style="text-decoration: none; color: #000"
+                    ><div class="btn-what-do-you-think">
+                      Bạn đang nghĩ gì thế ?
+                    </div></NuxtLink
+                  >
                 </div>
                 <div v-for="story in stories">
                   <div
@@ -173,19 +183,19 @@
                           <div class="me-2">
                             <font-awesome-icon icon="fa-solid fa-heart" />
                           </div>
-                          {{ story.likeNumber + " Like" }}
+                          {{ story.likeNumber + " Thích" }}
                         </div>
                         <div class="d-flex">
                           <div class="me-2">
                             <font-awesome-icon icon="fa-solid fa-comment" />
                           </div>
-                          Comment
+                          Đánh giá
                         </div>
                         <div class="d-flex">
                           <div class="me-2">
                             <font-awesome-icon icon="fa-solid fa-share" />
                           </div>
-                          {{ story.shareNumber + " Share" }}
+                          {{ story.shareNumber + " Chia sẻ" }}
                         </div>
                       </div>
                     </div>

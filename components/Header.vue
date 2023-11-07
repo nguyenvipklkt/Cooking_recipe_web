@@ -15,7 +15,7 @@
       <img src="/favicon.ico" alt="" style="height: 100%" class="me-5" />
       <div class="d-flex justyfy-content-center align-items-center">
         <div style="height: 34px" class="search d-flex">
-          <input type="text" class="search-input" placeholder=" Search..." />
+          <input type="text" class="search-input" placeholder=" Tìm kiếm..." />
           <font-awesome-icon
             icon="fa-solid fa-magnifying-glass"
             class="glass-icon"

@@ -3,13 +3,19 @@
     <div class="d-flex justify-content-center">
       <div>
         <div class="d-flex justify-content-center my-4">
-          <img
-            class="me-2"
-            :src="[formatImage(user.avatar)]"
-            alt=""
-            style="width: 45px; border-radius: 50%"
-          />
-          <div class="btn-what-do-you-think">What do you think ?</div>
+          <NuxtLink :to="{ path: '/profile' }">
+            <img
+              class="me-2"
+              :src="[formatImage(user.avatar)]"
+              alt=""
+              style="width: 45px; border-radius: 50%"
+            />
+          </NuxtLink>
+          <NuxtLink :to="{ path: '/post-story' }" style="text-decoration: none"
+            ><div class="btn-what-do-you-think">
+              Bạn đang nghĩ gì thế ?
+            </div></NuxtLink
+          >
         </div>
       </div>
     </div>
@@ -53,6 +59,7 @@ export default {
   background-color: #f0f2f5;
   padding: 10px 20px 10px 10px;
   width: 400px;
+  color: #000;
 }
 
 .btn-what-do-you-think:hover {
