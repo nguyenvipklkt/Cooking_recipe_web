@@ -23,6 +23,16 @@ const Utility = {
     },
     formatImage(img) {
       const config = useRuntimeConfig();
+      if (img == "") {
+        return config.public.BaseUrl + "default/avatar-trang.jpg";
+      }
+      return config.public.BaseUrl + img;
+    },
+    formatCover(img) {
+      const config = useRuntimeConfig();
+      if (img == "") {
+        return config.public.BaseUrl + "default/anh-bia.webp";
+      }
       return config.public.BaseUrl + img;
     },
     convertUrlToFile(path) {

@@ -15,122 +15,216 @@
       class="d-flex justify-content-center mx-3"
       style="color: #be895b; border: #ffeede solid 2px"
     >
-      <div class="d-flex justify-content-center">
-        <form
-          action=""
-          class="m-3"
-          style="font-family: Florence, cursive; font-size: 18px; width: 400px"
-        >
-          <div>
-            <div class="mb-3" style="font-size: 20px">Thông tin món ăn :</div>
-            <div class="d-flex justify-content-between">
-              <div class="mb-3">
-                <textarea
-                  class="form-control"
-                  style="resize: none"
-                  rows="1"
-                  placeholder="Tên món ăn của bạn"
-                  required
-                ></textarea>
-              </div>
+      <form action="" v-on:submit.prevent="createStory()">
+        <div>
+          <div class="d-flex justify-content-center">
+            <!-- add inf food  -->
+            <div
+              class="m-3 p-3"
+              style="
+                font-family: Florence, cursive;
+                font-size: 18px;
+                width: 400px;
+                border: solid #ffec99 2px;
+              "
+            >
               <div>
-                <div class="d-flex justify-content-center">
-                  <select
-                    name="foodType"
-                    id="foodType"
-                    style="opacity: 0.5; height: 37px"
+                <div class="mb-3" style="font-size: 20px">
+                  Thông tin món ăn :
+                </div>
+                <div class="d-flex justify-content-between">
+                  <div class="mb-3">
+                    <textarea
+                      class="form-control"
+                      style="resize: none"
+                      rows="1"
+                      placeholder="Tên món ăn của bạn"
+                      v-model="story.name"
+                      required
+                    ></textarea>
+                  </div>
+                  <div>
+                    <div class="d-flex justify-content-center">
+                      <select
+                        name="foodType"
+                        id="foodType"
+                        style="opacity: 0.5; height: 37px"
+                        v-model="story.foodTypeId"
+                      >
+                        <option value="1">Món kho</option>
+                        <option value="2">Món chiên</option>
+                        <option value="3">Món xào</option>
+                        <option value="4">Món nướng</option>
+                        <option value="5">Món gỏi/nộm</option>
+                        <option value="6">Món canh/súp</option>
+                        <option value="7">Món hấp</option>
+                        <option value="8">Món lẩu</option>
+                        <option value="9">Món khác</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <textarea
+                    class="form-control"
+                    style="resize: none"
+                    rows="2"
+                    placeholder="Mô tả"
+                    v-model="title"
+                    required
+                  ></textarea>
+                </div>
+                <div class="mb-3">
+                  <div
+                    class="d-flex justify-content-center"
+                    style="text-align: center"
                   >
-                    <option value="1">Món kho</option>
-                    <option value="2">Món chiên</option>
-                    <option value="3">Món xào</option>
-                    <option value="4">Món nướng</option>
-                    <option value="5">Món gỏi/nộm</option>
-                    <option value="6">Món canh/súp</option>
-                    <option value="7">Món hấp</option>
-                    <option value="8">Món lẩu</option>
-                    <option value="9">Món khác</option>
-                  </select>
+                    Nhớ đăng ảnh món ăn để mọi người dễ hình dung nhé :
+                  </div>
+                  <VueFileAgent
+                    :uploadUrl="uploadUrl"
+                    v-model:raw-model-value="thumbnail"
+                  ></VueFileAgent>
                 </div>
               </div>
             </div>
-
-            <div class="mb-3">
-              <textarea
-                class="form-control"
-                style="resize: none"
-                rows="2"
-                placeholder="Mô tả"
-                required
-              ></textarea>
-            </div>
-            <div class="mb-3">
-              <div
-                class="d-flex justify-content-center"
-                style="text-align: center"
-              >
-                Nhớ đăng ảnh món ăn để mọi người dễ hình dung nhé :
-              </div>
-              <VueFileAgent></VueFileAgent>
-            </div>
-          </div>
-        </form>
-        <div style="width: 100px"></div>
-        <div class="m-3" style="width: 520px; font-family: Florence, cursive">
-          <div class="mb-3 d-flex justify-content-between">
-            <div style="font-size: 20px">Thông tin nguyên liệu :</div>
-            <button
-              type="button"
-              @click="addIn"
+            <!-- add ingredients  -->
+            <div style="width: 100px"></div>
+            <div
+              class="m-3"
               style="
-                background-color: #fff;
-                border: 1px solid #fff;
-                color: #be895b;
+                width: 520px;
+                font-family: Florence, cursive;
+                border: solid #ffec99 2px;
               "
             >
-              <font-awesome-icon icon="fa-solid fa-plus" />
-            </button>
-          </div>
-          <div
-            class="mb-3"
-            v-for="(item, index) in ingredientList"
-            style="border: 2px dashed gray"
-          >
-            <div class="d-flex justify-content-between">
-              <div></div>
-              <div type="button" @click="deleteIn(index)" class="mx-2">
-                <font-awesome-icon icon="fa-solid fa-xmark" />
+              <div class="mb-3 d-flex justify-content-between p-3">
+                <div style="font-size: 20px">Thông tin nguyên liệu :</div>
+                <button
+                  type="button"
+                  @click="addIn"
+                  style="
+                    background-color: #fff;
+                    border: 1px solid #fff;
+                    color: #be895b;
+                  "
+                >
+                  <font-awesome-icon icon="fa-solid fa-plus" />
+                </button>
+              </div>
+              <div
+                class="mb-3 mx-3"
+                v-for="(item, index) in ingredientList"
+                style="border: 2px dashed gray"
+              >
+                <div class="d-flex justify-content-between">
+                  <div></div>
+                  <div type="button" @click="deleteIn(index)" class="mx-2">
+                    <font-awesome-icon icon="fa-solid fa-xmark" />
+                  </div>
+                </div>
+                <div class="mx-3 mb-2 d-flex justify-content-between">
+                  <textarea
+                    class="form-control"
+                    style="resize: none"
+                    rows="1"
+                    placeholder="Nhập nguyên liệu"
+                    v-model="item.name"
+                    required
+                  ></textarea>
+                  <div style="width: 40px"></div>
+                  <textarea
+                    class="form-control"
+                    style="resize: none; width: 300px"
+                    rows="1"
+                    placeholder="Số lượng"
+                    v-model="item.quantity"
+                    required
+                  ></textarea>
+
+                  <div style="width: 40px"></div>
+                  <textarea
+                    class="form-control"
+                    style="resize: none; width: 300px"
+                    rows="1"
+                    placeholder="Đơn vị"
+                    v-model="item.unit"
+                    required
+                  ></textarea>
+                </div>
               </div>
             </div>
-            <div class="mx-3 mb-2 d-flex justify-content-between">
-              <textarea
-                class="form-control"
-                style="resize: none"
-                rows="1"
-                placeholder="Nhập nguyên liệu"
-                required
-              ></textarea>
-              <div style="width: 40px"></div>
-              <textarea
-                class="form-control"
-                style="resize: none; width: 300px"
-                rows="1"
-                placeholder="Số lượng"
-                required
-              ></textarea>
-
-              <div style="width: 40px"></div>
-              <textarea
-                class="form-control"
-                style="resize: none; width: 300px"
-                rows="1"
-                placeholder="Đơn vị"
-                required
-              ></textarea>
+          </div>
+          <!-- add food step -->
+          <div
+            class="d-flex justify-content-center p-3"
+            style="font-family: Florence, cursive; border: solid #ffec99 2px"
+          >
+            <div>
+              <div class="d-flex justify-content-between mb-3">
+                <div class="" style="font-size: 20px">
+                  Nhớ chia sẻ các công đoạn chính nhé :
+                </div>
+                <div style="width: 50px"></div>
+                <button
+                  type="button"
+                  @click="addFoodStep()"
+                  style="
+                    background-color: #fff;
+                    border: 1px solid #fff;
+                    color: #be895b;
+                  "
+                >
+                  <font-awesome-icon icon="fa-solid fa-plus" />
+                </button>
+              </div>
+              <div
+                class="mb-3"
+                v-for="(item, index) in foodStepList"
+                style="border: 2px dashed gray"
+              >
+                <div class="d-flex justify-content-between">
+                  <div></div>
+                  <div
+                    type="button"
+                    @click="deleteFoodStep(index)"
+                    class="mx-2"
+                  >
+                    <font-awesome-icon icon="fa-solid fa-xmark" />
+                  </div>
+                </div>
+                <div class="mx-3 mb-2">
+                  <textarea
+                    class="form-control mb-2"
+                    style="resize: none"
+                    rows="1"
+                    placeholder="Tên giai đoạn"
+                    v-model="item.name"
+                    required
+                  ></textarea>
+                  <textarea
+                    class="form-control"
+                    style="resize: none"
+                    rows="3"
+                    placeholder="Chi tiết giai đoạn"
+                    v-model="item.content"
+                    required
+                  ></textarea>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        <div class="d-flex justify-content-center my-5">
+          <button type="submit" class="btn-create-story p-3">
+            Tạo một câu chuyện mới
+          </button>
+        </div>
+        <div style="height: 20px"></div>
+      </form>
     </div>
+    <div style="height: 40px"></div>
   </div>
 </template>
 
@@ -138,10 +232,25 @@
 definePageMeta({
   layout: "profile",
 });
+import CookingRecipeAxios from "~/mixins/cooking-recipe-axios";
+import Utility from "~/mixins/utility";
 export default {
+  mixins: [CookingRecipeAxios, Utility],
+  async beforeMount() {},
   data() {
     return {
       ingredientList: [],
+      newIngredient: { name: "", quantity: 0, unit: "" },
+      foodStepList: [],
+      newFoodStep: { name: "", content: "", noStep: "" },
+      story: {
+        foodTypeId: "",
+        name: "",
+        title: "",
+        ingredientList: "",
+        foodStepList: "",
+      },
+      thumbnail: [],
     };
   },
   methods: {
@@ -151,8 +260,63 @@ export default {
     addIn() {
       this.ingredientList[this.ingredientList.length] = {};
     },
+    deleteFoodStep(index) {
+      this.foodStepList.splice(index, 1);
+    },
+    addFoodStep() {
+      this.foodStepList[this.foodStepList.length] = {};
+    },
+    async createStory() {
+      for (let i = 0; i < this.ingredientList.length; i++) {
+        this.ingredientList.push({ ...this.newIngredient });
+      }
+      for (let i = 0; i < this.foodStepList.length; i++) {
+        this.newFoodStep.noStep = this.foodStepList[i].index;
+        this.foodStepList.push({ ...this.newFoodStep });
+      }
+      this.story.ingredientList = JSON.stringify(this.ingredientList);
+      this.story.foodStepList = JSON.stringify(this.foodStepList);
+      const formData = new FormData();
+      formData.append("name", this.story.name);
+      formData.append(
+        "image",
+        this.thumbnail[0].file,
+        this.thumbnail[0].file.name
+      );
+      formData.append("title", this.story.title);
+      formData.append("foodTypeId", this.story.foodTypeId);
+      formData.append("ingredients", this.story.ingredientList);
+      formData.append("foodSteps", this.story.foodStepList);
+
+      const response = await this.PostFormData(
+        "api/Story/CreateStory",
+        formData
+      );
+      if (response.code == "Ok") {
+        this.$toast.success(
+          "Chúc mừng bạn đã chia sẻ bài viết mới thành công !",
+          {
+            autoClose: 1000,
+          }
+        );
+        setTimeout(() => {
+          this.$router.push({ path: "/" });
+        }, 1000);
+      } else {
+        this.$toast.error("Bị lỗi gì rồi bạn ơi :(( ", {
+          autoClose: 1000,
+        });
+      }
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.btn-create-story {
+  border: 0px;
+  font-family: Florence, cursive;
+  color: #be895b;
+  font-size: 18px;
+}
+</style>

@@ -50,10 +50,10 @@
     </div>
     <div class="d-flex align-items-center">
       <div class="dropdown" style="float: right">
-        <div class="icon-main-setting">
+        <div class="icon-main-setting" @click="toggleDropdown()">
           <font-awesome-icon icon="fa-solid fa-gear" />
         </div>
-        <div class="dropdown-content">
+        <div v-if="isOpenDropdown" class="dropdown-content">
           <a href="#" @click="logout()">Logout</a>
         </div>
       </div>
@@ -74,6 +74,7 @@ export default {
   data() {
     return {
       isOpenAccountModal: false,
+      isOpenDropdown: false,
       profile: [],
       isOpenChangeProfile: true,
       modelUser: {
@@ -101,6 +102,9 @@ export default {
           autoClose: 1000,
         });
       }
+    },
+    toggleDropdown() {
+      this.isOpenDropdown = !this.isOpenDropdown;
     },
   },
 };
@@ -195,7 +199,7 @@ export default {
 }
 
 .dropdown-content {
-  display: none;
+  display: block;
   position: absolute;
   right: 0;
   background-color: #f9f9f9;
@@ -211,13 +215,13 @@ export default {
   display: block;
 }
 
-.dropdown-content a:hover {
+/* .dropdown-content a:hover {
   background-color: #f1f1f1;
 }
 
 .dropdown:hover .dropdown-content {
   display: block;
-}
+} */
 
 .icon-main-setting {
   padding: 23px 30px;

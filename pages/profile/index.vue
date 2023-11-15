@@ -4,7 +4,7 @@
       <div style="padding: 0 6%">
         <div class="w-100">
           <div
-            :style="'background-image: url(' + formatImage(profile.cover) + ')'"
+            :style="'background-image: url(' + formatCover(profile.cover) + ')'"
             style="
               z-index: 1;
               background-size: cover;
@@ -122,7 +122,7 @@
                     </div></NuxtLink
                   >
                 </div>
-                <div v-for="story in stories">
+                <div v-for="story in stories.reverse()">
                   <div
                     class="d-flex justify-content-center mb-4"
                     style="color: #be895b"
@@ -173,35 +173,30 @@
                       </div>
                       <div
                         class="d-flex justify-content-center"
-                        style="text-align: center; font-size: 16px"
+                        style="text-align: center; font-size: 18px"
                       >
                         {{ story.title }}
                       </div>
                       <hr />
-                      <div class="d-flex justify-content-between">
-                        <div class="d-flex">
-                          <div class="me-2">
-                            <font-awesome-icon icon="fa-solid fa-heart" />
-                          </div>
-                          {{ story.likeNumber + " Thích" }}
-                        </div>
-                        <div class="d-flex">
-                          <div class="me-2">
-                            <font-awesome-icon icon="fa-solid fa-comment" />
-                          </div>
-                          Đánh giá
-                        </div>
-                        <div class="d-flex">
-                          <div class="me-2">
-                            <font-awesome-icon icon="fa-solid fa-share" />
-                          </div>
-                          {{ story.shareNumber + " Chia sẻ" }}
-                        </div>
+                      <div class="d-flex justify-content-center">
+                        <NuxtLink
+                          :to="{
+                            path: `/story/${params}`,
+                            params: { id: story.id },
+                          }"
+                          class="d-flex align-items-center p-3 btn-detail-story"
+                          style="text-decoration: none"
+                        >
+                          <font-awesome-icon
+                            class="me-2"
+                            icon="fa-solid fa-circle-info"
+                          />
+                          <div>Chi tiết bài viết</div>
+                        </NuxtLink>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div style="height: 50px"></div>
               </div>
             </div>
           </div>
@@ -209,7 +204,8 @@
       </div>
     </div>
   </div>
-  <!-- Modal -->
+
+  <!-- Modal update profile -->
 
   <div id="myModal" class="modal" v-if="isOpenModal">
     <!-- Modal content -->
@@ -417,7 +413,7 @@ export default {
       this.isOpenModal = !this.isOpenModal;
     },
     async getFoodList() {
-      var data = await this.Get("api/Food/GetFoodList", {});
+      var data = await this.Get("api/Food/GetFoodListWithUser", {});
       if (data.code == "Ok") {
         // this.stories = JSON.stringify(data.data);
         this.stories = data.data;
@@ -567,5 +563,16 @@ export default {
 .btn-update-profile:hover {
   color: #fbf3cf;
   background-color: #e6bb00;
+}
+
+.btn-detail-story {
+  color: #c49368;
+  font-size: 18px;
+  border: 0px;
+  background-color: #fff1b3;
+}
+
+.btn-detail-story:hover {
+  background-color: #ffec99;
 }
 </style>
