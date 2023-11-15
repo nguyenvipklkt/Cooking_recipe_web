@@ -51,7 +51,7 @@ const Utility = {
     countDate(dateString) {
       let now = new Date();
       const date = new Date(dateString);
-      console.log(date);
+      date.setHours(date.getHours() + 7);
 
       let formatDate = now - date;
       // Lấy số phút

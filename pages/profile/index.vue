@@ -180,10 +180,7 @@
                       <hr />
                       <div class="d-flex justify-content-center">
                         <NuxtLink
-                          :to="{
-                            path: `/story/${params}`,
-                            params: { id: story.id },
-                          }"
+                          :to="{ path: '/story', query: { page: story.id } }"
                           class="d-flex align-items-center p-3 btn-detail-story"
                           style="text-decoration: none"
                         >
@@ -313,7 +310,7 @@ export default {
   mixins: [CookingRecipeAxios, Utility],
   components: {},
   async beforeMount() {
-    await this.getProfile();
+    await this.getUserByLocalstorage();
     await this.getFollow();
     await this.getFollower();
     await this.getFoodList();
@@ -339,19 +336,8 @@ export default {
     };
   },
   methods: {
-    async getProfile() {
-      var data = await this.Get("api/Account/GetProfile", {});
-      if (data.code == "Ok") {
-        this.profile = data.data;
-        localStorage.setItem("user", JSON.stringify(this.profile));
-        this.modelUser = this.profile;
-        this.fileB[0] = this.convertUrlToFile(this.profile.avatar);
-        this.fileA[0] = this.convertUrlToFile(this.profile.cover);
-      } else {
-        this.$toast.error(`${data.des}`, {
-          autoClose: 1000,
-        });
-      }
+    getUserByLocalstorage() {
+      this.profile = JSON.parse(localStorage.getItem("user"));
     },
     async updateProfile() {
       const formData = new FormData();

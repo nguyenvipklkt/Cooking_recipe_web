@@ -2,15 +2,12 @@
   <div class="w-100">
     <Header></Header>
     <div class="w-100 row m-0" style="background-color: #f1f1f1">
-      <div
-        class="d-none d-lg-block col-3 p-2"
-        style="height: calc(100vh - 70px)"
-      >
+      <div class="d-none d-xl-block col-3 p-2">
         <div class="w-100 h-100 bg-white" style="border-radius: 10px">
           <Menu></Menu>
         </div>
       </div>
-      <div class="col-12 col-lg-9 p-2" style="height: calc(100vh - 70px)">
+      <div class="col-12 col-xl-9 p-2">
         <div class="w-100 h-100 bg-white" style="border-radius: 10px">
           <slot></slot>
         </div>

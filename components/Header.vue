@@ -43,7 +43,7 @@
         /></NuxtLink>
       </div>
       <div>
-        <NuxtLink :to="{ path: '/profile' }"
+        <NuxtLink :to="{ path: '/profile', query: { page: user.id } }"
           ><font-awesome-icon class="icon-main-header" icon="fa-solid fa-user"
         /></NuxtLink>
       </div>
@@ -68,6 +68,7 @@ export default {
   mixins: [CookingRecipeAxios, Utility],
   components: {},
   async beforeMount() {
+    this.getUserByLocalstorage();
     await this.getProfile();
   },
 
@@ -77,16 +78,13 @@ export default {
       isOpenDropdown: false,
       profile: [],
       isOpenChangeProfile: true,
-      modelUser: {
-        firstName: "",
-        lastName: "",
-        title: "",
-        phoneNumber: "",
-        birthday: "",
-      },
+      user: [],
     };
   },
   methods: {
+    getUserByLocalstorage() {
+      this.user = JSON.parse(localStorage.getItem("user"));
+    },
     async logout() {
       this.deleteAllLocalStorages();
       this.deleteAllCookies();

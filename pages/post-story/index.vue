@@ -33,7 +33,7 @@
                   Thông tin món ăn :
                 </div>
                 <div class="d-flex justify-content-between">
-                  <div class="mb-3">
+                  <div class="mb-3 me-2">
                     <textarea
                       class="form-control"
                       style="resize: none"
@@ -71,7 +71,7 @@
                     style="resize: none"
                     rows="2"
                     placeholder="Mô tả"
-                    v-model="title"
+                    v-model="story.title"
                     required
                   ></textarea>
                 </div>
@@ -240,9 +240,7 @@ export default {
   data() {
     return {
       ingredientList: [],
-      newIngredient: { name: "", quantity: 0, unit: "" },
       foodStepList: [],
-      newFoodStep: { name: "", content: "", noStep: "" },
       story: {
         foodTypeId: "",
         name: "",
@@ -267,15 +265,6 @@ export default {
       this.foodStepList[this.foodStepList.length] = {};
     },
     async createStory() {
-      for (let i = 0; i < this.ingredientList.length; i++) {
-        this.ingredientList.push({ ...this.newIngredient });
-      }
-      for (let i = 0; i < this.foodStepList.length; i++) {
-        this.newFoodStep.noStep = this.foodStepList[i].index;
-        this.foodStepList.push({ ...this.newFoodStep });
-      }
-      this.story.ingredientList = JSON.stringify(this.ingredientList);
-      this.story.foodStepList = JSON.stringify(this.foodStepList);
       const formData = new FormData();
       formData.append("name", this.story.name);
       formData.append(
@@ -285,8 +274,8 @@ export default {
       );
       formData.append("title", this.story.title);
       formData.append("foodTypeId", this.story.foodTypeId);
-      formData.append("ingredients", this.story.ingredientList);
-      formData.append("foodSteps", this.story.foodStepList);
+      formData.append("ingredients", JSON.stringify(this.ingredientList));
+      formData.append("foodSteps", JSON.stringify(this.foodStepList));
 
       const response = await this.PostFormData(
         "api/Story/CreateStory",
