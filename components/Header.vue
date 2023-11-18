@@ -54,7 +54,7 @@
           <font-awesome-icon icon="fa-solid fa-gear" />
         </div>
         <div v-if="isOpenDropdown" class="dropdown-content">
-          <a href="#" @click="logout()">Logout</a>
+          <a href="#" @click="logout()">Đăng xuất</a>
         </div>
       </div>
     </div>

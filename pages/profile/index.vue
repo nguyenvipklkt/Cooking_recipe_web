@@ -152,10 +152,20 @@
                             </div>
                           </div>
                         </div>
-                        <div style="font-size: 25px">
+                        <div
+                          style="font-size: 25px"
+                          @click="toggleDropdown()"
+                          class="setting-in-story"
+                        >
                           <font-awesome-icon
                             icon="fa-solid fa-ellipsis-vertical"
                           />
+                        </div>
+                        <div v-if="isOpenDropdown" class="dropdown-content">
+                          <a href="#">Chỉnh sửa bài viết</a>
+                          <a href="#" @click="deleteStory(story.id)"
+                            >Xoá bài viết</a
+                          >
                         </div>
                       </div>
                       <div
@@ -318,6 +328,7 @@ export default {
 
   data() {
     return {
+      isOpenDropdown: false,
       isOpenModal: false,
       follow: [],
       follower: [],
@@ -390,7 +401,7 @@ export default {
     },
     formatTitle(abc) {
       if (abc == "") {
-        return `This guy is so lazy, he doesn't write anything`;
+        return `Tên này rất lười, không tiết lộ cái gì hết !`;
       } else {
         return abc;
       }
@@ -405,6 +416,27 @@ export default {
         this.stories = data.data;
       } else {
         this.$toast.error(`${data.des}`, {
+          autoClose: 1000,
+        });
+      }
+    },
+    toggleDropdown() {
+      this.isOpenDropdown = !this.isOpenDropdown;
+    },
+    async deleteStory(foodId) {
+      const res = await this.Delete(
+        `api/Story/DeleteStory?foodId=${foodId}`,
+        {}
+      );
+      if (res.code == "Ok") {
+        this.$toast.success("Xoá bài viết thành công", {
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          this.$router.push({ path: "/" });
+        }, 1000);
+      } else {
+        this.$toast.error("xoá bài viết thất bại !", {
           autoClose: 1000,
         });
       }
@@ -560,5 +592,39 @@ export default {
 
 .btn-detail-story:hover {
   background-color: #ffec99;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: block;
+  position: absolute;
+  right: 250px;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #e4e6eb;
+}
+.setting-in-story {
+  padding: 10px 20px 10px 20px;
+}
+.setting-in-story:hover {
+  background-color: #e4e6eb;
+  border-radius: 8px;
+  cursor: pointer;
 }
 </style>

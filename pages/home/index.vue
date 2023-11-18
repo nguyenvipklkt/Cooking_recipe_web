@@ -51,7 +51,7 @@
                     </div>
                   </div>
                 </div>
-                <div style="font-size: 25px">
+                <div style="font-size: 25px" class="setting-in-story">
                   <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" />
                 </div>
               </div>
@@ -169,5 +169,14 @@ export default {
 
 .btn-detail-story:hover {
   background-color: #ffec99;
+}
+
+.setting-in-story {
+  padding: 10px 20px 10px 20px;
+}
+.setting-in-story:hover {
+  background-color: #e4e6eb;
+  border-radius: 8px;
+  cursor: pointer;
 }
 </style>
