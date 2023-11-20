@@ -32,7 +32,12 @@
             >
               <div class="d-flex justify-content-between">
                 <div class="d-flex">
-                  <NuxtLink>
+                  <NuxtLink
+                    :to="{
+                      path: checkUser(story.userId),
+                      query: { page: story.userId },
+                    }"
+                  >
                     <img
                       class="me-2"
                       :src="[formatImage(story.authorAvatar)]"
@@ -41,7 +46,13 @@
                     />
                   </NuxtLink>
                   <div>
-                    <NuxtLink>
+                    <NuxtLink
+                      :to="{
+                        path: checkUser(story.userId),
+                        query: { page: story.userId },
+                      }"
+                      style="text-decoration: none; color: #be895b"
+                    >
                       <div style="font-size: 18px; font-weight: 500">
                         {{ story.authorFirstName + " " + story.authorLastName }}
                       </div>
@@ -134,6 +145,13 @@ export default {
       if (data.code == "Ok") {
         return data.data;
       }
+    },
+    checkUser(id) {
+      var userInStorage = JSON.parse(localStorage.getItem("user"));
+      if (id != userInStorage.id) {
+        return "/user";
+      }
+      return "/profile";
     },
   },
 };

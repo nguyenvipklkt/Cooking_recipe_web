@@ -76,19 +76,21 @@
       </div>
     </div>
     <div class="d-flex justify-content-center mt-4 align-items-center">
-      <form action="" class="d-flex">
-        <textarea
-          class="form-control"
+      <form action="" class="d-flex" v-on:submit.prevent="comment()">
+        <input
+          type="text"
           style="
             resize: none;
             width: 800px;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
+            outline: none;
+            border: 1px solid #dee2e6;
           "
-          rows="2"
+          class="ps-3"
           placeholder="Nhớ để lại bình luận để cải thiện bài viết hơn nhé bạn !"
-          required
-        ></textarea>
+          v-model="content"
+        />
         <button
           style="border: 1px solid #dee2e6; height: 61.6px; border-left: 0"
           type="submit"
@@ -100,6 +102,42 @@
           />
         </button>
       </form>
+    </div>
+    <div class="d-flex justify-content-center mt-4">
+      <div>
+        <div v-for="cm in commentList">
+          <div class="d-flex align-items-center mb-3">
+            <NuxtLink
+              :to="{
+                path: checkUser(cm.userId),
+                query: { page: cm.userId },
+              }"
+            >
+              <img
+                class="me-2"
+                :src="[formatImage(cm.avatar)]"
+                alt=""
+                style="width: 50px; border-radius: 50%; border: 5px solid #fff"
+              />
+            </NuxtLink>
+            <NuxtLink
+              :to="{
+                path: checkUser(cm.userId),
+                query: { page: cm.userId },
+              }"
+              style="text-decoration: none; color: #000"
+            >
+              <div class="me-5 h6">{{ cm.firstName + " " + cm.lastName }}</div>
+            </NuxtLink>
+            <div
+              style="border: 1px solid #000; border-radius: 8px; width: 600px"
+              class="px-4 py-2"
+            >
+              {{ cm.content }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div style="height: 100px"></div>
   </div>
@@ -119,6 +157,7 @@ export default {
     await this.getIngredientList();
     await this.getFoodStepList();
     await this.getUserInf();
+    await this.getComment();
   },
   data() {
     return {
@@ -126,6 +165,8 @@ export default {
       ingredientList: {},
       foodStepList: {},
       user: {},
+      content: "",
+      commentList: {},
     };
   },
   methods: {
@@ -185,6 +226,45 @@ export default {
           autoClose: 1000,
         });
       }
+    },
+    async comment() {
+      const commentRequest = {
+        foodId: this.$route.query.page,
+        content: this.content,
+      };
+      const data = await this.Post("api/Review/CreateComent", commentRequest);
+      if (data.code == "Ok") {
+        this.$toast.success("Đã bình luận về bài viết này !", {
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          reloadNuxtApp();
+        }, 1000);
+      } else {
+        this.$toast.error("Bình luận thất bại !", {
+          autoClose: 2000,
+        });
+      }
+    },
+    async getComment() {
+      const data = await this.Get(
+        `api/Review/GetListComment?foodId=${this.$route.query.page}`,
+        {}
+      );
+      if (data.code == "Ok") {
+        this.commentList = data.data;
+      } else {
+        this.$toast.error("Lấy bình luận thất bại !", {
+          autoClose: 2000,
+        });
+      }
+    },
+    checkUser(id) {
+      var userInStorage = JSON.parse(localStorage.getItem("user"));
+      if (id != userInStorage.id) {
+        return "/user";
+      }
+      return "/profile";
     },
   },
 };

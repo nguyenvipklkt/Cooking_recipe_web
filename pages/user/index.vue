@@ -47,13 +47,22 @@
           >
             <div>
               <div class="d-flex">
-                <NuxtLink
-                  :to="{ path: '/post-story' }"
+                <button
+                  v-if="!isFollow"
                   class="me-4 py-2 px-3 btn-new-post text-decoration-none user-select-none"
-                  >Bài viết mới</NuxtLink
+                  @click="followUser()"
                 >
-                <button class="px-4 py-2 btn-edit-profile" @click="openModal()">
-                  Chỉnh sửa trang cá nhân
+                  Theo dõi
+                </button>
+                <button class="px-4 py-2 me-4 btn-edit-profile" v-if="isFollow">
+                  Đã theo dõi
+                </button>
+                <button
+                  class="px-4 py-2 btn btn-danger"
+                  v-if="isFollow"
+                  @click="unfollow()"
+                >
+                  Huỷ theo dõi
                 </button>
               </div>
             </div>
@@ -107,21 +116,7 @@
             <div class="col-12 col-xl-8">
               <div class="w-100 h-100 bg-white" style="border-radius: 10px">
                 <div style="height: 20px"></div>
-                <div class="d-flex justify-content-center mb-4">
-                  <img
-                    class="me-2"
-                    :src="[formatImage(profile.avatar)]"
-                    alt=""
-                    style="width: 45px; border-radius: 50%"
-                  />
-                  <NuxtLink
-                    :to="{ path: '/post-story' }"
-                    style="text-decoration: none; color: #000"
-                    ><div class="btn-what-do-you-think">
-                      Bạn đang nghĩ gì thế ?
-                    </div></NuxtLink
-                  >
-                </div>
+
                 <div v-for="story in stories.reverse()">
                   <div
                     class="d-flex justify-content-center mb-4"
@@ -150,25 +145,6 @@
                             <div style="font-size: 15px">
                               {{ countDate(story.createdDate) }}
                             </div>
-                          </div>
-                        </div>
-                        <div class="dropdown setting-in-story">
-                          <font-awesome-icon
-                            icon="fa-solid fa-ellipsis-vertical"
-                            style="font-size: 25px"
-                          />
-                          <div class="dropdown-content">
-                            <NuxtLink
-                              :to="{
-                                path: '/update-story',
-                                query: { story: story.id },
-                              }"
-                            >
-                              Chỉnh sửa bài viết
-                            </NuxtLink>
-                            <a href="#" @click="deleteStory(story.id)"
-                              >Xoá bài viết</a
-                            >
                           </div>
                         </div>
                       </div>
@@ -215,103 +191,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Modal update profile -->
-
-  <div id="myModal" class="modal" v-if="isOpenModal">
-    <!-- Modal content -->
-    <form action="" v-on:submit.prevent="updateProfile()">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="p-3">Edit profile</h2>
-          <span class="close" @click="openModal()">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div style="height: 20px"></div>
-          <div
-            class="d-flex mb-4 mt-2 justify-content-between align-items-center"
-            style="font-family: Florence, cursive"
-          >
-            <div style="font-size: 17px">Cover :</div>
-            <VueFileAgent
-              :uploadUrl="uploadUrl"
-              v-model:raw-model-value="fileA"
-            ></VueFileAgent>
-          </div>
-          <div
-            class="d-flex mb-4 mt-2 justify-content-between align-items-center"
-            style="font-family: Florence, cursive"
-          >
-            <div style="font-size: 17px">Avatar :</div>
-            <VueFileAgent
-              :uploadUrl="uploadUrl"
-              v-model:raw-model-value="fileB"
-            ></VueFileAgent>
-          </div>
-          <textarea
-            class="form-control"
-            style="resize: none; font-family: Florence, cursive"
-            rows="3"
-            v-model="modelUser.title"
-            placeholder="Title"
-            required
-          ></textarea>
-          <div class="" style="font-size: 17px; font-family: Florence, cursive">
-            <div class="d-flex justify-content-between my-4">
-              <textarea
-                class="form-control"
-                style="resize: none; width: 150px"
-                rows="1"
-                placeholder="First name"
-                v-model="modelUser.firstName"
-                required
-              ></textarea>
-              <textarea
-                class="form-control"
-                style="resize: none; width: 150px"
-                rows="1"
-                placeholder="Last name"
-                v-model="modelUser.lastName"
-                required
-              ></textarea>
-              <textarea
-                class="form-control"
-                style="resize: none; width: 150px"
-                rows="1"
-                placeholder="Address"
-                v-model="modelUser.address"
-                required
-              ></textarea>
-            </div>
-            <textarea
-              class="form-control my-4"
-              style="resize: none"
-              rows="1"
-              v-model="modelUser.phoneNumber"
-              placeholder="Phone number"
-              required
-            ></textarea>
-            <div class="input-group mb-2">
-              <input
-                type="datetime-local"
-                class="form-control"
-                id="basic-url"
-                aria-describedby="basic-addon3"
-                v-model="modelUser.birthday"
-                required
-              />
-            </div>
-          </div>
-          <div style="height: 20px"></div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="mx-3 btn-update-profile">
-            Save change
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
 </template>
 
 <script>
@@ -322,28 +201,22 @@ import CookingRecipeAxios from "~/mixins/cooking-recipe-axios";
 import Utility from "~/mixins/utility";
 export default {
   mixins: [CookingRecipeAxios, Utility],
-  components: {},
   async beforeMount() {
     await this.getProfile();
     await this.getFollow();
     await this.getFollower();
     await this.getFoodList();
+    await this.UpdateFollowInLocal();
+    await this.UpdateFollowerInLocal();
+    this.checkfollow();
   },
 
   data() {
     return {
-      isOpenModal: false,
+      isFollow: false,
       follow: [],
       follower: [],
       profile: [],
-      modelUser: {
-        firstName: "",
-        lastName: "",
-        title: "",
-        phoneNumber: "",
-        birthday: "",
-        address: "",
-      },
       fileA: [],
       fileB: [],
       stories: [],
@@ -351,11 +224,10 @@ export default {
   },
   methods: {
     async getProfile() {
-      var data = await this.Get("api/Account/GetProfile", {});
+      let userId = this.$route.query.page;
+      var data = await this.Get(`api/Account/GetUserInf?userId=${userId}`, {});
       if (data.code == "Ok") {
         this.profile = data.data;
-        localStorage.setItem("user", JSON.stringify(this.profile));
-        this.modelUser = this.profile;
         this.fileB[0] = this.convertUrlToFile(this.profile.avatar);
         this.fileA[0] = this.convertUrlToFile(this.profile.cover);
       } else {
@@ -364,38 +236,14 @@ export default {
         });
       }
     },
-    async updateProfile() {
-      const formData = new FormData();
-      formData.append("avatar", this.fileB[0].file, this.fileB[0].file.name);
-      formData.append("cover", this.fileA[0].file, this.fileA[0].file.name);
-      formData.append("title", this.modelUser.title);
-      formData.append("firstName", this.modelUser.firstName);
-      formData.append("lastName", this.modelUser.lastName);
-      formData.append("phoneNumber", this.modelUser.phoneNumber);
-      formData.append("address", this.modelUser.address);
-      formData.append("birthday", this.modelUser.birthday);
-      const response = await this.PutFormData(
-        "api/Account/UpdateProfile",
-        formData
-      );
-      if (response.code == "Ok") {
-        this.$toast.success("Change information successfull !", {
-          autoClose: 1000,
-        });
-        setTimeout(() => {
-          reloadNuxtApp();
-        }, 1000);
-      } else {
-        this.$toast.error("Change information fail !", {
-          autoClose: 2000,
-        });
-      }
-    },
     async getFollow() {
-      var data = await this.Get("api/Follow/GetFollowUser", {});
+      let userId = this.$route.query.page;
+      var data = await this.Get(
+        `api/Follow/GetFollowOtherUser?userId=${userId}`,
+        {}
+      );
       if (data.code == "Ok") {
         this.follow = data.data;
-        localStorage.setItem("follow", JSON.stringify(this.follow));
       } else {
         this.$toast.error(`${data.des}`, {
           autoClose: 1000,
@@ -403,10 +251,13 @@ export default {
       }
     },
     async getFollower() {
-      var data = await this.Get("api/Follow/GetFollower", {});
+      let userId = this.$route.query.page;
+      var data = await this.Get(
+        `api/Follow/GetFollowerInOther?userId=${userId}`,
+        {}
+      );
       if (data.code == "Ok") {
         this.follower = data.data;
-        localStorage.setItem("follower", JSON.stringify(this.follower));
       } else {
         this.$toast.error(`${data.des}`, {
           autoClose: 1000,
@@ -420,11 +271,12 @@ export default {
         return abc;
       }
     },
-    openModal() {
-      this.isOpenModal = !this.isOpenModal;
-    },
     async getFoodList() {
-      var data = await this.Get("api/Food/GetFoodListWithUser", {});
+      let userId = this.$route.query.page;
+      var data = await this.Get(
+        `api/Food/GetFoodListWithOtherUser?userId=${userId}`,
+        {}
+      );
       if (data.code == "Ok") {
         // this.stories = JSON.stringify(data.data);
         this.stories = data.data;
@@ -434,20 +286,73 @@ export default {
         });
       }
     },
-    async deleteStory(foodId) {
-      const res = await this.Delete(
-        `api/Story/DeleteStory?foodId=${foodId}`,
-        {}
-      );
+    async checkfollow() {
+      var followInLocal = JSON.parse(localStorage.getItem("follow"));
+      let userId = this.$route.query.page;
+      for (var i = 0; i < followInLocal.length; i++) {
+        if (followInLocal[i].followingUserId == userId) {
+          this.isFollow = true;
+        }
+      }
+    },
+    async followUser() {
+      let userId = this.$route.query.page;
+      const res = await this.Post("api/Follow/Follow", {
+        followingUserId: userId,
+      });
       if (res.code == "Ok") {
-        this.$toast.success("Xoá bài viết thành công", {
+        this.$toast.success("Bạn đã theo dõi thành công !", {
           autoClose: 1000,
         });
         setTimeout(() => {
-          this.$router.push({ path: "/" });
+          reloadNuxtApp();
         }, 1000);
       } else {
-        this.$toast.error("xoá bài viết thất bại !", {
+        this.$toast.error("Theo dõi thất bại !", {
+          autoClose: 2000,
+        });
+      }
+    },
+    async UpdateFollowInLocal() {
+      var data = await this.Get("api/Follow/GetFollowUser", {});
+      if (data.code == "Ok") {
+        this.follow = data.data;
+        localStorage.setItem("follow", JSON.stringify(this.follow));
+      } else {
+        this.$toast.error(`${data.des}`, {
+          autoClose: 1000,
+        });
+      }
+    },
+    async UpdateFollowerInLocal() {
+      var data = await this.Get("api/Follow/GetFollower", {});
+      if (data.code == "Ok") {
+        this.follower = data.data;
+        localStorage.setItem("follower", JSON.stringify(this.follower));
+      } else {
+        this.$toast.error(`${data.des}`, {
+          autoClose: 1000,
+        });
+      }
+    },
+    async unfollow() {
+      let userId = this.$route.query.page;
+      const res = await this.Delete(
+        `api/Follow/UnFollow/?followingUserId=${userId}`,
+        {
+          followingUserId: userId,
+        }
+      );
+      if (res.code == "Ok") {
+        this.isFollow = false;
+        this.$toast.success("Bạn huỷ theo dõi thành công !", {
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          reloadNuxtApp();
+        }, 1000);
+      } else {
+        this.$toast.error("Huỷ theo dõi thất bại !", {
           autoClose: 1000,
         });
       }
@@ -478,13 +383,8 @@ export default {
   font-weight: 500;
 }
 
-.btn-edit-profile:hover {
-  background-color: #d8dadf;
-  border: 1px solid #d8dadf;
-}
-
 .btn-what-do-you-think {
-  border-radius: 25px;
+  border-radius: 8px;
   border: 1px solid #f0f2f5;
   background-color: #f0f2f5;
   padding: 10px 20px 10px 10px;
@@ -497,103 +397,6 @@ export default {
   border: 1px solid #e4e6e9;
 }
 
-/* The Modal (background) */
-.modal {
-  display: block; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 4; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-  position: relative;
-  background-color: #fefefe;
-  margin: auto;
-  padding: 0;
-  border: 1px solid #888;
-  width: 40%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  -webkit-animation-name: animatetop;
-  -webkit-animation-duration: 0.4s;
-  animation-name: animatetop;
-  animation-duration: 0.4s;
-}
-
-/* Add Animation */
-@-webkit-keyframes animatetop {
-  from {
-    top: -300px;
-    opacity: 0;
-  }
-  to {
-    top: 0;
-    opacity: 1;
-  }
-}
-
-@keyframes animatetop {
-  from {
-    top: -300px;
-    opacity: 0;
-  }
-  to {
-    top: 0;
-    opacity: 1;
-  }
-}
-
-/* The Close Button */
-.close {
-  color: #e6bb00;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.modal-header {
-  padding: 2px 16px;
-  background-color: #ffeede;
-  color: #e6bb00;
-  font-family: Florence, cursive;
-}
-
-.modal-body {
-  padding: 2px 16px;
-}
-
-.modal-footer {
-  padding: 10px 16px;
-  background-color: #ffeede;
-  color: white;
-}
-
-.btn-update-profile {
-  border-radius: 10px;
-  border: 1px solid #e6bb00;
-  color: #e6bb00;
-  background-color: #fbf3cf;
-  padding: 10px;
-}
-.btn-update-profile:hover {
-  color: #fbf3cf;
-  background-color: #e6bb00;
-}
-
 .btn-detail-story {
   color: #c49368;
   font-size: 18px;
@@ -603,42 +406,5 @@ export default {
 
 .btn-detail-story:hover {
   background-color: #ffec99;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-  padding: 15px 20px 10px 20px;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  right: 40px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  padding: 12px 16px;
-  z-index: 6;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: #e4e6eb;
-}
-.setting-in-story:hover {
-  background-color: #e4e6eb;
-  border-radius: 8px;
-  cursor: pointer;
 }
 </style>

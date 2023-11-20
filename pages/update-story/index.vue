@@ -9,7 +9,7 @@
         font-weight: 540;
       "
     >
-      Viết lên món ăn của bạn
+      Cập nhật món ăn của bạn
     </div>
     <div
       class="d-flex justify-content-center mx-3"
@@ -69,7 +69,7 @@
                   <textarea
                     class="form-control"
                     style="resize: none"
-                    rows="2"
+                    rows="5"
                     placeholder="Mô tả"
                     v-model="story.title"
                     required
@@ -236,7 +236,11 @@ import CookingRecipeAxios from "~/mixins/cooking-recipe-axios";
 import Utility from "~/mixins/utility";
 export default {
   mixins: [CookingRecipeAxios, Utility],
-  async beforeMount() {},
+  async beforeMount() {
+    await this.getFood();
+    await this.getIngredientList();
+    await this.getFoodStepList();
+  },
   data() {
     return {
       ingredientList: [],
@@ -267,6 +271,7 @@ export default {
     async updateStory() {
       const formData = new FormData();
       formData.append("name", this.story.name);
+      formData.append("id", this.$route.query.story);
       formData.append(
         "image",
         this.thumbnail[0].file,
@@ -277,8 +282,8 @@ export default {
       formData.append("ingredients", JSON.stringify(this.ingredientList));
       formData.append("foodSteps", JSON.stringify(this.foodStepList));
 
-      const response = await this.PostFormData(
-        "api/Story/CreateStory",
+      const response = await this.PutFormData(
+        "api/Story/UpdateStory",
         formData
       );
       if (response.code == "Ok") {
@@ -291,6 +296,48 @@ export default {
         setTimeout(() => {
           this.$router.push({ path: "/" });
         }, 1000);
+      } else {
+        this.$toast.error("Bị lỗi gì rồi bạn ơi :(( ", {
+          autoClose: 1000,
+        });
+      }
+    },
+    async getFood() {
+      const foodId = this.$route.query.story;
+      const res = await this.Get(`api/Food/GetFood?foodId=${foodId}`, {});
+      if (res.code == "Ok") {
+        this.story.name = res.data.name;
+        this.story.foodTypeId = res.data.foodTypeId;
+        this.story.title = res.data.title;
+        this.thumbnail[0] = this.convertUrlToFile(res.data.thumbnails);
+      } else {
+        this.$toast.error("Bị lỗi gì rồi bạn ơi :(( ", {
+          autoClose: 1000,
+        });
+      }
+    },
+    async getIngredientList() {
+      const foodId = this.$route.query.story;
+      const res = await this.Get(
+        `api/Ingredients/GetIngredientList?foodId=${foodId}`,
+        {}
+      );
+      if (res.code == "Ok") {
+        this.ingredientList = res.data;
+      } else {
+        this.$toast.error("Bị lỗi gì rồi bạn ơi :(( ", {
+          autoClose: 1000,
+        });
+      }
+    },
+    async getFoodStepList() {
+      const foodId = this.$route.query.story;
+      const res = await this.Get(
+        `api/FoodStep/GetFoodStepList?FoodId=${foodId}`,
+        {}
+      );
+      if (res.code == "Ok") {
+        this.foodStepList = res.data;
       } else {
         this.$toast.error("Bị lỗi gì rồi bạn ơi :(( ", {
           autoClose: 1000,
