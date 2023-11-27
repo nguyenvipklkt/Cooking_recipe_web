@@ -3,9 +3,10 @@
     class="w-100 d-flex justify-content-between"
     style="
       height: 70px;
-      background-color: #ffeede;
+      background-color: #fff;
       padding: 0 12px;
       font-family: Florence, cursive;
+      box-shadow: 0px 1px 5px 0px #888888;
     "
   >
     <div
@@ -15,17 +16,23 @@
       <img src="/favicon.ico" alt="" style="height: 100%" class="me-5" />
       <div class="d-flex justyfy-content-center align-items-center">
         <div style="height: 34px" class="search d-flex">
-          <input type="text" class="search-input" placeholder=" Tìm kiếm..." />
+          <input
+            type="text"
+            class="search-input"
+            placeholder=" Tìm kiếm..."
+            style="background-color: #f0f2f5"
+          />
           <font-awesome-icon
             icon="fa-solid fa-magnifying-glass"
             class="glass-icon"
+            style="background-color: #f0f2f5"
           />
         </div>
       </div>
     </div>
     <div
       class="align-items-center d-none d-lg-flex justify-content-between"
-      style="background-color: #ffeede; border-radius: 12px"
+      style="background-color: #fff; border-radius: 12px"
     >
       <div>
         <NuxtLink :to="{ path: '/' }">
@@ -36,7 +43,7 @@
         </NuxtLink>
       </div>
       <div>
-        <NuxtLink :to="{}"
+        <NuxtLink :to="{ path: '/friend' }"
           ><font-awesome-icon
             class="icon-main-header"
             icon="fa-solid fa-user-group"

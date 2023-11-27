@@ -198,6 +198,7 @@ export default {
         });
         setTimeout(() => {
           this.$router.push({ path: "/" });
+          reloadNuxtApp();
         }, 1000);
       } else {
         // alert(data.des);

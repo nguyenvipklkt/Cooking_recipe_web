@@ -119,17 +119,10 @@
 
                 <div v-for="story in stories.reverse()">
                   <div
-                    class="d-flex justify-content-center mb-4"
-                    style="color: #be895b"
+                    class="d-flex justify-content-center bg-white mb-4"
+                    style="color: #000"
                   >
-                    <div
-                      class="p-3"
-                      style="
-                        background-color: #fff2e6;
-                        width: 700px;
-                        border-radius: 8px;
-                      "
-                    >
+                    <div class="p-3" style="width: 700px; border-radius: 8px">
                       <div class="d-flex justify-content-between">
                         <div class="d-flex">
                           <img
@@ -150,7 +143,7 @@
                       </div>
                       <div
                         class="d-flex justify-content-center mb-2"
-                        style="font-size: 28px; font-weight: 500"
+                        style="font-size: 25px; font-weight: 500"
                       >
                         {{ story.name }}
                       </div>
@@ -163,7 +156,7 @@
                       </div>
                       <div
                         class="d-flex justify-content-center"
-                        style="text-align: center; font-size: 18px"
+                        style="text-align: center; font-size: 15px"
                       >
                         {{ story.title }}
                       </div>
@@ -398,13 +391,13 @@ export default {
 }
 
 .btn-detail-story {
-  color: #c49368;
+  color: #000;
   font-size: 18px;
   border: 0px;
-  background-color: #fff1b3;
+  background-color: #f0f2f5;
 }
 
 .btn-detail-story:hover {
-  background-color: #ffec99;
+  background-color: #e4e6e9;
 }
 </style>

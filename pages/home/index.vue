@@ -2,7 +2,10 @@
   <div>
     <div class="d-flex justify-content-center">
       <div>
-        <div class="d-flex justify-content-center my-4">
+        <div
+          class="d-flex justify-content-center mb-4 bg-white p-4"
+          style="border-radius: 8px"
+        >
           <NuxtLink :to="{ path: '/profile' }">
             <img
               class="me-2"
@@ -18,18 +21,8 @@
           >
         </div>
         <div v-for="story in stories.reverse()">
-          <div
-            class="d-flex justify-content-center mb-4"
-            style="color: #be895b"
-          >
-            <div
-              class="p-3"
-              style="
-                background-color: #fff2e6;
-                width: 700px;
-                border-radius: 8px;
-              "
-            >
+          <div class="d-flex justify-content-center mb-4" style="color: #000">
+            <div class="p-3 bg-white" style="width: 700px; border-radius: 8px">
               <div class="d-flex justify-content-between">
                 <div class="d-flex">
                   <NuxtLink
@@ -51,9 +44,9 @@
                         path: checkUser(story.userId),
                         query: { page: story.userId },
                       }"
-                      style="text-decoration: none; color: #be895b"
+                      style="text-decoration: none; color: #000"
                     >
-                      <div style="font-size: 18px; font-weight: 500">
+                      <div style="font-size: 15px; font-weight: 500">
                         {{ story.authorFirstName + " " + story.authorLastName }}
                       </div>
                     </NuxtLink>
@@ -68,22 +61,83 @@
               </div>
               <div
                 class="d-flex justify-content-center mb-2"
-                style="font-size: 28px; font-weight: 500"
+                style="font-size: 25px; font-weight: 500"
               >
                 {{ story.name }}
               </div>
               <div class="d-flex justify-content-center mb-2">
+                <video
+                  v-if="story.video"
+                  width="640"
+                  height="360"
+                  :src="[formatImage(story.video)]"
+                  controls
+                  class="mb-4"
+                  type="video/mp4"
+                ></video>
                 <img
+                  v-else
                   :src="[formatImage(story.thumbnails)]"
                   alt=""
-                  style="width: 300px; border: 5px solid #fff"
+                  style="width: 360px; border: 5px solid #fff"
                 />
               </div>
               <div
                 class="d-flex justify-content-center"
-                style="text-align: center; font-size: 18px"
+                style="text-align: center; font-size: 15px"
               >
                 {{ story.title }}
+              </div>
+              <hr />
+              <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                  <div class="me-3 d-flex align-items-center">
+                    <font-awesome-icon icon="clock" style="font-size: 30px" />
+                  </div>
+                  <div>
+                    <div style="font-size: 13px; font-weight: 600">
+                      Chuẩn bị
+                    </div>
+                    <div>{{ story.preparationTime + " Phút" }}</div>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="me-3 d-flex align-items-center">
+                    <font-awesome-icon
+                      icon="kitchen-set"
+                      style="font-size: 30px"
+                    />
+                  </div>
+                  <div>
+                    <div style="font-size: 13px; font-weight: 600">
+                      Nấu nướng
+                    </div>
+                    <div>{{ story.cookingTime + " Phút" }}</div>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="me-3 d-flex align-items-center">
+                    <font-awesome-icon
+                      icon="bowl-food"
+                      style="font-size: 30px"
+                    />
+                  </div>
+                  <div>
+                    <div style="font-size: 13px; font-weight: 600">
+                      Khẩu phần
+                    </div>
+                    <div>{{ story.meal + " Người" }}</div>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div class="me-3 d-flex align-items-center">
+                    <font-awesome-icon icon="5" style="font-size: 30px" />
+                  </div>
+                  <div>
+                    <div style="font-size: 13px; font-weight: 600">Độ khó</div>
+                    <div>{{ story.levelOfDifficult + "/5" }}</div>
+                  </div>
+                </div>
               </div>
               <hr />
               <div class="d-flex justify-content-center">
@@ -179,14 +233,14 @@ export default {
 }
 
 .btn-detail-story {
-  color: #c49368;
+  color: #000;
   font-size: 18px;
   border: 0px;
-  background-color: #fff1b3;
+  background-color: #f0f2f5;
 }
 
 .btn-detail-story:hover {
-  background-color: #ffec99;
+  background-color: #e4e6e9;
 }
 
 .setting-in-story {

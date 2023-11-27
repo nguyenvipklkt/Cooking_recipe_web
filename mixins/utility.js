@@ -36,8 +36,21 @@ const Utility = {
       return config.public.BaseUrl + img;
     },
     convertUrlToFile(path) {
+      const urlVideo = this.formatImage(path);
+      const file = new File([urlVideo], urlVideo, { type: "image/png" });
+      console.log(file);
+      const obj = {
+        name: path,
+        type: "video/*",
+        ext: "*",
+        file: file,
+        url: urlVideo,
+      };
+      return obj;
+    },
+    convertUrlToVideo(path) {
       const urlImage = this.formatImage(path);
-      const file = new File([urlImage], urlImage, { type: "image/png" });
+      const file = new File([urlImage], urlImage, { type: "video/mp4" });
       console.log(file);
       const obj = {
         name: path,

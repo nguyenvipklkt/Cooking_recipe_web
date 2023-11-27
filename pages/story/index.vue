@@ -2,7 +2,7 @@
   <div class="h-100 w-100">
     <div
       class="h2 p-4 d-flex justify-content-center"
-      style="font-family: Florence, cursive; color: #be895b"
+      style="font-family: Florence, cursive"
     >
       {{
         "Hãy cùng " +
@@ -15,7 +15,7 @@
     <hr />
     <div
       class="d-flex justify-content-center pt-4"
-      style="text-align: center; font-family: Florence, cursive; color: #be895b"
+      style="text-align: center; font-family: Florence, cursive"
     >
       <div class="ms-4">
         <div>
@@ -26,6 +26,18 @@
             alt=""
             style="width: 500px; border-radius: 8px"
           />
+          <div class="h5 mb-4">{{ food.title }}</div>
+        </div>
+        <div>
+          <div class="h3 mb-4">{{ "Video hướng dẫn : " }}</div>
+          <video
+            width="640"
+            height="360"
+            :src="[formatImage(food.video)]"
+            controls
+            class="mb-4"
+            type="video/mp4"
+          ></video>
           <div class="h5 mb-4">{{ food.title }}</div>
         </div>
         <div>

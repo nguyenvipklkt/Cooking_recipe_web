@@ -65,7 +65,7 @@
           <div style="height: 20px"></div>
           <div class="row w-100 m-0">
             <div class="d-none d-xl-block col-4">
-              <div class="w-100 h-100 bg-white" style="border-radius: 10px">
+              <div class="w-100 bg-white" style="border-radius: 10px">
                 <div style="height: 10px"></div>
                 <div class="mx-3" style="font-weight: 600; font-size: 24px">
                   Giới thiệu
@@ -94,7 +94,7 @@
                       </div>
                       <div>Số điện thoại : {{ profile.phoneNumber }}</div>
                     </div>
-                    <div class="my-3 d-flex">
+                    <div class="my-3 d-flex mb-4">
                       <div class="me-2">
                         <font-awesome-icon icon="fa-solid fa-location-dot" />
                       </div>
@@ -105,9 +105,11 @@
               </div>
             </div>
             <div class="col-12 col-xl-8">
-              <div class="w-100 h-100 bg-white" style="border-radius: 10px">
-                <div style="height: 20px"></div>
-                <div class="d-flex justify-content-center mb-4">
+              <div class="w-100 h-100" style="border-radius: 10px">
+                <div
+                  class="d-flex justify-content-center mb-4 bg-white py-4"
+                  style="border-radius: 8px"
+                >
                   <img
                     class="me-2"
                     :src="[formatImage(profile.avatar)]"
@@ -123,14 +125,11 @@
                   >
                 </div>
                 <div v-for="story in stories.reverse()">
-                  <div
-                    class="d-flex justify-content-center mb-4"
-                    style="color: #be895b"
-                  >
+                  <div class="d-flex justify-content-center mb-4">
                     <div
                       class="p-3"
                       style="
-                        background-color: #fff2e6;
+                        background-color: #fff;
                         width: 700px;
                         border-radius: 8px;
                       "
@@ -174,22 +173,91 @@
                       </div>
                       <div
                         class="d-flex justify-content-center mb-2"
-                        style="font-size: 28px; font-weight: 500"
+                        style="font-size: 25px; font-weight: 500"
                       >
                         {{ story.name }}
                       </div>
                       <div class="d-flex justify-content-center mb-2">
+                        <video
+                          v-if="story.video"
+                          width="640"
+                          height="360"
+                          :src="[formatImage(story.video)]"
+                          controls
+                          class="mb-4"
+                          type="video/mp4"
+                        ></video>
                         <img
+                          v-else
                           :src="[formatImage(story.thumbnails)]"
                           alt=""
-                          style="width: 300px; border: 5px solid #fff"
+                          style="width: 360px; border: 5px solid #fff"
                         />
                       </div>
                       <div
                         class="d-flex justify-content-center"
-                        style="text-align: center; font-size: 18px"
+                        style="text-align: center; font-size: 15px"
                       >
                         {{ story.title }}
+                      </div>
+                      <hr />
+                      <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                          <div class="me-3 d-flex align-items-center">
+                            <font-awesome-icon
+                              icon="clock"
+                              style="font-size: 30px"
+                            />
+                          </div>
+                          <div>
+                            <div style="font-size: 13px; font-weight: 600">
+                              Chuẩn bị
+                            </div>
+                            <div>{{ story.preparationTime + " Phút" }}</div>
+                          </div>
+                        </div>
+                        <div class="d-flex">
+                          <div class="me-3 d-flex align-items-center">
+                            <font-awesome-icon
+                              icon="kitchen-set"
+                              style="font-size: 30px"
+                            />
+                          </div>
+                          <div>
+                            <div style="font-size: 13px; font-weight: 600">
+                              Nấu nướng
+                            </div>
+                            <div>{{ story.cookingTime + " Phút" }}</div>
+                          </div>
+                        </div>
+                        <div class="d-flex">
+                          <div class="me-3 d-flex align-items-center">
+                            <font-awesome-icon
+                              icon="bowl-food"
+                              style="font-size: 30px"
+                            />
+                          </div>
+                          <div>
+                            <div style="font-size: 13px; font-weight: 600">
+                              Khẩu phần
+                            </div>
+                            <div>{{ story.meal + " Người" }}</div>
+                          </div>
+                        </div>
+                        <div class="d-flex">
+                          <div class="me-3 d-flex align-items-center">
+                            <font-awesome-icon
+                              icon="5"
+                              style="font-size: 30px"
+                            />
+                          </div>
+                          <div>
+                            <div style="font-size: 13px; font-weight: 600">
+                              Độ khó
+                            </div>
+                            <div>{{ story.levelOfDifficult + "/5" }}</div>
+                          </div>
+                        </div>
                       </div>
                       <hr />
                       <div class="d-flex justify-content-center">
@@ -552,7 +620,7 @@ export default {
 
 /* The Close Button */
 .close {
-  color: #e6bb00;
+  color: #000;
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -567,8 +635,8 @@ export default {
 
 .modal-header {
   padding: 2px 16px;
-  background-color: #ffeede;
-  color: #e6bb00;
+  background-color: #f0f2f5;
+  color: #000;
   font-family: Florence, cursive;
 }
 
@@ -578,31 +646,30 @@ export default {
 
 .modal-footer {
   padding: 10px 16px;
-  background-color: #ffeede;
+  background-color: #f0f2f5;
   color: white;
 }
 
 .btn-update-profile {
   border-radius: 10px;
-  border: 1px solid #e6bb00;
-  color: #e6bb00;
-  background-color: #fbf3cf;
+  border: 10px;
+  color: #fff;
+  background-color: #0866ff;
   padding: 10px;
 }
 .btn-update-profile:hover {
-  color: #fbf3cf;
-  background-color: #e6bb00;
+  background-color: #085ce6;
 }
 
 .btn-detail-story {
-  color: #c49368;
+  color: #000;
   font-size: 18px;
   border: 0px;
-  background-color: #fff1b3;
+  background-color: #f0f2f5;
 }
 
 .btn-detail-story:hover {
-  background-color: #ffec99;
+  background-color: #e4e6e9;
 }
 
 .dropdown {

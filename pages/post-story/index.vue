@@ -64,7 +64,50 @@
                     </div>
                   </div>
                 </div>
-
+                <div class="d-flex justify-content-between">
+                  <div class="mb-3 me-2">
+                    <textarea
+                      class="form-control"
+                      style="resize: none"
+                      rows="1"
+                      placeholder="Thời gian chuẩn bị"
+                      v-model="story.preparationTime"
+                      required
+                    ></textarea>
+                  </div>
+                  <div class="mb-3 me-2">
+                    <textarea
+                      class="form-control"
+                      style="resize: none"
+                      rows="1"
+                      placeholder="Thời gian nấu ăn"
+                      v-model="story.cookingTime"
+                      required
+                    ></textarea>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <div class="mb-3 me-2">
+                    <textarea
+                      class="form-control"
+                      style="resize: none"
+                      rows="1"
+                      placeholder="Khẩu phần ăn cho :"
+                      v-model="story.meal"
+                      required
+                    ></textarea>
+                  </div>
+                  <div class="mb-3 me-2">
+                    <textarea
+                      class="form-control"
+                      style="resize: none"
+                      rows="1"
+                      placeholder="Độ khó"
+                      v-model="story.levelOfDifficult"
+                      required
+                    ></textarea>
+                  </div>
+                </div>
                 <div class="mb-3">
                   <textarea
                     class="form-control"
@@ -85,6 +128,18 @@
                   <VueFileAgent
                     :uploadUrl="uploadUrl"
                     v-model:raw-model-value="thumbnail"
+                  ></VueFileAgent>
+                </div>
+                <div class="mb-3">
+                  <div
+                    class="d-flex justify-content-center"
+                    style="text-align: center"
+                  >
+                    Video hướng dẫn :
+                  </div>
+                  <VueFileAgent
+                    :uploadUrl="uploadUrl"
+                    v-model:raw-model-value="video"
                   ></VueFileAgent>
                 </div>
               </div>
@@ -247,8 +302,13 @@ export default {
         title: "",
         ingredientList: "",
         foodStepList: "",
+        preparationTime: "",
+        cookingTime: "",
+        meal: "",
+        levelOfDifficult: "",
       },
       thumbnail: [],
+      video: [],
     };
   },
   methods: {
@@ -272,8 +332,13 @@ export default {
         this.thumbnail[0].file,
         this.thumbnail[0].file.name
       );
+      formData.append("video", this.video[0].file, this.video[0].file.name);
       formData.append("title", this.story.title);
       formData.append("foodTypeId", this.story.foodTypeId);
+      formData.append("preparationTime", this.story.preparationTime);
+      formData.append("cookingTime", this.story.cookingTime);
+      formData.append("meal", this.story.meal);
+      formData.append("levelOfDifficult", this.story.levelOfDifficult);
       formData.append("ingredients", JSON.stringify(this.ingredientList));
       formData.append("foodSteps", JSON.stringify(this.foodStepList));
 
