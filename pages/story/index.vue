@@ -28,6 +28,46 @@
           />
           <div class="h5 mb-4">{{ food.title }}</div>
         </div>
+        <div class="d-flex justify-content-center my-5">
+          <div class="d-flex justify-content-between" style="width: 700px">
+            <div class="d-flex">
+              <div class="me-3 d-flex align-items-center">
+                <font-awesome-icon icon="clock" style="font-size: 40px" />
+              </div>
+              <div>
+                <div style="font-size: 15px; font-weight: 600">Chuẩn bị</div>
+                <div>{{ food.preparationTime + " Phút" }}</div>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div class="me-3 d-flex align-items-center">
+                <font-awesome-icon icon="kitchen-set" style="font-size: 40px" />
+              </div>
+              <div>
+                <div style="font-size: 15px; font-weight: 600">Nấu nướng</div>
+                <div>{{ food.cookingTime + " Phút" }}</div>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div class="me-3 d-flex align-items-center">
+                <font-awesome-icon icon="bowl-food" style="font-size: 40px" />
+              </div>
+              <div>
+                <div style="font-size: 15px; font-weight: 600">Khẩu phần</div>
+                <div>{{ food.meal + " Người" }}</div>
+              </div>
+            </div>
+            <div class="d-flex">
+              <div class="me-3 d-flex align-items-center">
+                <font-awesome-icon icon="5" style="font-size: 40px" />
+              </div>
+              <div>
+                <div style="font-size: 13px; font-weight: 600">Độ khó</div>
+                <div>{{ food.levelOfDifficult + "/5" }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div>
           <div class="h3 mb-4">{{ "Video hướng dẫn : " }}</div>
           <video

@@ -14,21 +14,51 @@
       style="width: 215px; min-height: 100%"
     >
       <img src="/favicon.ico" alt="" style="height: 100%" class="me-5" />
-      <div class="d-flex justyfy-content-center align-items-center">
-        <div style="height: 34px" class="search d-flex">
-          <input
-            type="text"
-            class="search-input"
-            placeholder=" Tìm kiếm..."
-            style="background-color: #f0f2f5"
-          />
-          <font-awesome-icon
-            icon="fa-solid fa-magnifying-glass"
-            class="glass-icon"
-            style="background-color: #f0f2f5"
-          />
+      <form action="" v-on:submit.prevent="search()">
+        <div class="d-flex justyfy-content-center align-items-center">
+          <div style="height: 34px" class="search d-flex dropdown-search">
+            <input
+              type="text"
+              class="search-input"
+              v-model="keyword"
+              placeholder=" Tìm kiếm..."
+              style="background-color: #f0f2f5"
+            />
+            <button
+              class="glass-icon pe-2"
+              type="submit"
+              style="border: 0; background-color: #f0f2f5; height: 34px"
+            >
+              <font-awesome-icon icon="fa-solid fa-magnifying-glass" />
+            </button>
+            <div v-if="isKeySearchList" class="dropdown-content-search">
+              <div v-for="(keySearch, index) in keySearchList">
+                <div class="d-flex justify-content-between">
+                  <div
+                    @click="search(keySearch.keyword)"
+                    class="mb-3"
+                    style="border-bottom: 1px solid #000; cursor: pointer"
+                  >
+                    {{ keySearch.keyword }}
+                  </div>
+                  <div
+                    class=""
+                    @click="
+                      deleteKeySearch(keySearch.id, keySearch.keyword, index)
+                    "
+                    style="cursor: pointer"
+                  >
+                    <font-awesome-icon
+                      style="padding: 2px"
+                      icon="fa-solid fa-xmark"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </form>
     </div>
     <div
       class="align-items-center d-none d-lg-flex justify-content-between"
@@ -77,6 +107,7 @@ export default {
   async beforeMount() {
     this.getUserByLocalstorage();
     await this.getProfile();
+    await this.getKeySearch();
   },
 
   data() {
@@ -86,6 +117,9 @@ export default {
       profile: [],
       isOpenChangeProfile: true,
       user: [],
+      keyword: "",
+      keySearchList: [],
+      isKeySearchList: false,
     };
   },
   methods: {
@@ -110,6 +144,47 @@ export default {
     },
     toggleDropdown() {
       this.isOpenDropdown = !this.isOpenDropdown;
+    },
+    search(key) {
+      if (!key) {
+        if (this.keyword == "") {
+          this.$toast.error("Bạn chưa tìm kiếm gì cả !", {
+            autoClose: 1000,
+          });
+        } else {
+          this.$router.push({ path: "/search", query: { page: this.keyword } });
+        }
+      } else {
+        this.$router.push({ path: "/search", query: { page: key } });
+      }
+    },
+    async getKeySearch() {
+      const data = await this.Get("api/Food/GetKeySearch", {});
+      if (data.code == "Ok") {
+        this.keySearchList = data.data;
+        if (this.keySearchList == "") {
+          this.isKeySearchList = false;
+        } else {
+          this.isKeySearchList = true;
+        }
+      } else {
+        this.$toast.error(`Lỗi lịch sử tìm kiếm`, {
+          autoClose: 1000,
+        });
+      }
+    },
+    async deleteKeySearch(keyId, keyword, index) {
+      const data = await this.Delete(`api/Food/DeleteSearch?id=${keyId}`, {});
+      if (data.code == "Ok") {
+        this.$toast.success(`Xoá key ${keyword} thành công !`, {
+          autoClose: 1000,
+        });
+        this.keySearchList.splice(index, 1);
+      } else {
+        this.$toast.error(`Lỗi xoá lịch sử tìm kiếm`, {
+          autoClose: 1000,
+        });
+      }
     },
   },
 };
@@ -236,5 +311,25 @@ export default {
   background-color: #d9d9d9;
   border-radius: 12px;
   cursor: pointer;
+}
+
+.dropdown-search {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content-search {
+  display: none;
+  position: absolute;
+  top: 35px;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  padding: 10px 10px;
+  z-index: 1;
+}
+
+.dropdown-search:hover .dropdown-content-search {
+  display: block;
 }
 </style>

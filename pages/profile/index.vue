@@ -261,8 +261,8 @@
                       </div>
                       <hr />
                       <div class="d-flex justify-content-center">
-                        <NuxtLink
-                          :to="{ path: '/story', query: { page: story.id } }"
+                        <button
+                          @click="updateView(story.id)"
                           class="d-flex align-items-center p-3 btn-detail-story"
                           style="text-decoration: none"
                         >
@@ -271,7 +271,7 @@
                             icon="fa-solid fa-circle-info"
                           />
                           <div>Chi tiết bài viết</div>
-                        </NuxtLink>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -518,6 +518,14 @@ export default {
         this.$toast.error("xoá bài viết thất bại !", {
           autoClose: 1000,
         });
+      }
+    },
+    async updateView(foodId) {
+      const data = await this.Post(`api/Story/AddView?foodId=${foodId}`, {});
+      if (data.code == "Ok") {
+        this.$router.push({ path: "/story", query: { page: foodId } });
+      } else {
+        this.$router.push({ path: "/story", query: { page: foodId } });
       }
     },
   },
