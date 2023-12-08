@@ -24,7 +24,7 @@
               style="
                 font-family: Florence, cursive;
                 font-size: 18px;
-                width: 400px;
+                width: 500px;
                 border: solid #ffec99 2px;
               "
             >
@@ -45,6 +45,11 @@
                   </div>
                   <div>
                     <div class="d-flex justify-content-center">
+                      <label
+                        for="foodType"
+                        class="d-flex align-items-center me-1"
+                        >Thể loại :</label
+                      >
                       <select
                         name="foodType"
                         id="foodType"
@@ -62,6 +67,41 @@
                         <option value="9">Món khác</option>
                       </select>
                     </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                  <div class="d-flex justify-content-center">
+                    <label for="foodType" class="d-flex align-items-center me-1"
+                      >Món ăn miền :</label
+                    >
+                    <select
+                      name="foodType"
+                      id="foodType"
+                      style="opacity: 0.5; height: 37px"
+                      v-model="story.foodPlaceId"
+                    >
+                      <option value="1">Miền bắc</option>
+                      <option value="2">Miền trung</option>
+                      <option value="3">Miền nam</option>
+                    </select>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    <label for="foodType" class="d-flex align-items-center me-1"
+                      >Cho mùa :</label
+                    >
+                    <select
+                      name="foodType"
+                      id="foodType"
+                      style="opacity: 0.5; height: 37px"
+                      v-model="story.seasonalFoodId"
+                    >
+                      <option value="1">Mùa xuân</option>
+                      <option value="2">Mùa hạ</option>
+                      <option value="3">Mùa thu</option>
+                      <option value="4">Mùa đông</option>
+                      <option value="5">Mùa mưa</option>
+                      <option value="6">Mùa khô</option>
+                    </select>
                   </div>
                 </div>
                 <div class="d-flex justify-content-between">
@@ -298,6 +338,8 @@ export default {
       foodStepList: [],
       story: {
         foodTypeId: "",
+        seasonalFoodId: "",
+        foodPlaceId: "",
         name: "",
         title: "",
         ingredientList: "",
@@ -335,6 +377,8 @@ export default {
       formData.append("video", this.video[0].file, this.video[0].file.name);
       formData.append("title", this.story.title);
       formData.append("foodTypeId", this.story.foodTypeId);
+      formData.append("foodPlaceId", this.story.foodPlaceId);
+      formData.append("seasonalFoodId", this.story.seasonalFoodId);
       formData.append("preparationTime", this.story.preparationTime);
       formData.append("cookingTime", this.story.cookingTime);
       formData.append("meal", this.story.meal);
@@ -342,24 +386,46 @@ export default {
       formData.append("ingredients", JSON.stringify(this.ingredientList));
       formData.append("foodSteps", JSON.stringify(this.foodStepList));
 
-      const response = await this.PostFormData(
-        "api/Story/CreateStory",
-        formData
-      );
-      if (response.code == "Ok") {
-        this.$toast.success(
-          "Chúc mừng bạn đã chia sẻ bài viết mới thành công !",
+      if (
+        (this.story.foodPlaceId == 1 || this.story.foodPlaceId == 2) &&
+        (this.story.seasonalFoodId == 5 || this.story.seasonalFoodId == 6)
+      ) {
+        this.$toast.error(
+          "Miền bắc, miền Trung có 4 mùa Xuân Hạ Thu Đông bạn nhé !",
           {
             autoClose: 1000,
           }
         );
-        setTimeout(() => {
-          this.$router.push({ path: "/" });
-        }, 1000);
-      } else {
-        this.$toast.error("Bị lỗi gì rồi bạn ơi :(( ", {
+      } else if (
+        this.story.foodPlaceId == 3 &&
+        (this.story.seasonalFoodId == 1 ||
+          this.story.seasonalFoodId == 2 ||
+          this.story.seasonalFoodId == 3 ||
+          this.story.seasonalFoodId == 4)
+      ) {
+        this.$toast.error("Miền nam có 2 mùa Mưa và Khô thôi bạn nhé !", {
           autoClose: 1000,
         });
+      } else {
+        const response = await this.PostFormData(
+          "api/Story/CreateStory",
+          formData
+        );
+        if (response.code == "Ok") {
+          this.$toast.success(
+            "Chúc mừng bạn đã chia sẻ bài viết mới thành công !",
+            {
+              autoClose: 1000,
+            }
+          );
+          setTimeout(() => {
+            this.$router.push({ path: "/" });
+          }, 1000);
+        } else {
+          this.$toast.error("Bị lỗi gì rồi bạn ơi :(( ", {
+            autoClose: 1000,
+          });
+        }
       }
     },
   },

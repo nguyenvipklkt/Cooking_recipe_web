@@ -180,12 +180,16 @@
               style="text-decoration: none; color: #000"
             >
               <div class="me-5 h6">{{ cm.firstName + " " + cm.lastName }}</div>
+              <div v-if="checkAuthor(cm.userId)" class="h6">Tác giả</div>
             </NuxtLink>
             <div
               style="border: 1px solid #000; border-radius: 8px; width: 600px"
-              class="px-4 py-2"
+              class="px-4 py-2 d-flex justify-content-between"
             >
-              {{ cm.content }}
+              <div>{{ cm.content }}</div>
+              <div @click="deleteComment(cm.id)" class="comment-trash">
+                <font-awesome-icon icon="fa-solid fa-trash" />
+              </div>
             </div>
           </div>
         </div>
@@ -318,8 +322,41 @@ export default {
       }
       return "/profile";
     },
+    async deleteComment(id) {
+      const data = await this.Delete(
+        `api/Review/DeleteComment?commentId=${id}`,
+        {}
+      );
+      if (data.code == "Ok") {
+        this.$toast.success("Xoá bình luận thành công !", {
+          autoClose: 2000,
+        });
+        setTimeout(() => {
+          reloadNuxtApp();
+        }, 1000);
+      } else {
+        this.$toast.error("Bạn không đủ quyền để xoá !", {
+          autoClose: 2000,
+        });
+      }
+    },
+    checkAuthor(CommentId) {
+      if (this.user.id == CommentId) {
+        return true;
+      }
+      return false;
+    },
   },
 };
 </script>
 
-<style></style>
+<style>
+.comment-trash {
+  border-radius: 50%;
+  padding: 4px 10px 4px 10px;
+}
+.comment-trash:hover {
+  background-color: #f2f2f2;
+  cursor: pointer;
+}
+</style>

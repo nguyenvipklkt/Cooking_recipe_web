@@ -34,6 +34,7 @@
               height: 243px;
               border: 5px solid #fff;
               cursor: pointer;
+              border-radius: 8px;
             "
           />
         </div>

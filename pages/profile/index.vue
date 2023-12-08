@@ -146,8 +146,18 @@
                             <div style="font-size: 18px; font-weight: 500">
                               {{ profile.firstName + " " + profile.lastName }}
                             </div>
-                            <div style="font-size: 15px">
-                              {{ countDate(story.createdDate) }}
+                            <div class="d-flex">
+                              <div style="font-size: 15px" class="me-2">
+                                {{ countDate(story.createdDate) }}
+                              </div>
+                              <div v-if="story.accessRange == 1">
+                                <font-awesome-icon icon="fa-solid fa-globe" />
+                              </div>
+                              <div v-else>
+                                <font-awesome-icon
+                                  icon="fa-solid fa-user-group"
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -167,6 +177,9 @@
                             </NuxtLink>
                             <a href="#" @click="deleteStory(story.id)"
                               >Xoá bài viết</a
+                            >
+                            <a href="#" @click="changeStatusStory(story.id)"
+                              >Thay đổi truy cập</a
                             >
                           </div>
                         </div>
@@ -528,6 +541,21 @@ export default {
         this.$router.push({ path: "/story", query: { page: foodId } });
       }
     },
+    async changeStatusStory(id) {
+      const data = await this.Put(`api/Food/UpdateStatusFood?foodId=${id}`, {});
+      if (data.code == "Ok") {
+        this.$toast.success("Cập nhật truy cập thành công", {
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          reloadNuxtApp();
+        }, 1000);
+      } else {
+        this.$toast.error("Cập nhật truy cập thất bại !", {
+          autoClose: 1000,
+        });
+      }
+    },
   },
 };
 </script>
@@ -690,7 +718,7 @@ export default {
   display: none;
   position: absolute;
   background-color: #f9f9f9;
-  min-width: 160px;
+  min-width: 200px;
   right: 40px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   padding: 12px 16px;
