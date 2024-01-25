@@ -1,32 +1,23 @@
 <template>
   <div class="d-flex justify-content-center">
-    <div>
-      <div
-        class="d-flex justify-content-center bg-white p-4 mb-4"
-        style="border-radius: 8px"
-      >
-        <NuxtLink :to="{ path: '/profile' }">
-          <img
-            class="me-2"
-            :src="[formatImage(user.avatar)]"
-            alt=""
-            style="width: 45px; border-radius: 50%"
-          />
-        </NuxtLink>
-        <NuxtLink :to="{ path: '/post-story' }" style="text-decoration: none"
-          ><div class="btn-what-do-you-think">
-            Bạn đang nghĩ gì thế ?
-          </div></NuxtLink
+    <div class="h-100" style="background-color: #f1f1f1">
+      <div v-if="!isHaveResult">
+        <div
+          class="d-flex justify-content-center mb-4 bg-white p-4 h3"
+          style="border-radius: 8px"
         >
+          Không có kết quả tìm kiếm nào !
+        </div>
+        <div class="vh-100"></div>
       </div>
-      <div v-for="story in stories">
+      <div v-if="isHaveResult" v-for="story in stories">
         <div class="d-flex justify-content-center mb-4" style="color: #000">
           <div class="p-3 bg-white" style="width: 700px; border-radius: 8px">
             <div class="d-flex justify-content-between">
               <div class="d-flex">
                 <NuxtLink
                   :to="{
-                    path: '/user',
+                    path: checkUser(story.userId),
                     query: { page: story.userId },
                   }"
                 >
@@ -40,7 +31,7 @@
                 <div>
                   <NuxtLink
                     :to="{
-                      path: '/user',
+                      path: checkUser(story.userId),
                       query: { page: story.userId },
                     }"
                     style="text-decoration: none; color: #000"
@@ -53,6 +44,9 @@
                     {{ countDate(story.createdDate) }}
                   </div>
                 </div>
+              </div>
+              <div style="font-size: 25px" class="setting-in-story">
+                <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" />
               </div>
             </div>
             <div
@@ -131,7 +125,7 @@
               <button
                 @click="updateView(story.id)"
                 class="d-flex align-items-center p-3 btn-detail-story"
-                style="text-decoration: none"
+                style="text-decoration: none; border: 0"
               >
                 <font-awesome-icon
                   class="me-2"
@@ -180,38 +174,158 @@
 </template>
 
 <script>
+definePageMeta({
+  layout: "search",
+});
 import CookingRecipeAxios from "~/mixins/cooking-recipe-axios";
 import Utility from "~/mixins/utility";
-definePageMeta({
-  layout: "friend",
-});
-
 export default {
   mixins: [CookingRecipeAxios, Utility],
   components: {},
-  async beforeMount() {
-    await this.getUserByLocalstorage();
-    await this.getFoodByFollowingUser();
-  },
   data() {
     return {
-      user: [],
+      isHaveResult: false,
       stories: [],
     };
   },
+  async beforeMount() {
+    await this.search();
+  },
   methods: {
-    getUserByLocalstorage() {
-      this.user = JSON.parse(localStorage.getItem("user"));
-    },
-    async getFoodByFollowingUser() {
-      const data = await this.Get("api/Food/GetFoodByFollowingUser", {});
-      if (data.code == "Ok") {
-        this.stories = data.data;
+    async search() {
+      if (
+        !this.$route.query.type &&
+        !this.$route.query.place &&
+        !this.$route.query.season
+      ) {
+        this.isHaveResult = false;
+      } else if (!this.$route.query.type && !this.$route.query.place) {
+        const res = await this.Get(
+          `api/Food/GetFoodFromFoodType?seasonalFoodId=${this.$route.query.season}`,
+          {}
+        );
+        if (res.code == "Ok") {
+          this.stories = res.data;
+          if (this.stories == "") {
+            this.isHaveResult = false;
+          } else {
+            this.isHaveResult = true;
+          }
+        } else {
+          this.$toast.error("Lỗi tìm kiếm rồi bạn ơi !", {
+            autoClose: 1000,
+          });
+        }
+      } else if (!this.$route.query.place && !this.$route.query.season) {
+        const res = await this.Get(
+          `api/Food/GetFoodFromFoodType?foodTypeId=${this.$route.query.type}`,
+          {}
+        );
+        if (res.code == "Ok") {
+          this.stories = res.data;
+          if (this.stories == "") {
+            this.isHaveResult = false;
+          } else {
+            this.isHaveResult = true;
+          }
+        } else {
+          this.$toast.error("Lỗi tìm kiếm rồi bạn ơi !", {
+            autoClose: 1000,
+          });
+        }
+      } else if (!this.$route.query.type && !this.$route.query.season) {
+        const res = await this.Get(
+          `api/Food/GetFoodFromFoodType?foodPlaceId=${this.$route.query.place}`,
+          {}
+        );
+        if (res.code == "Ok") {
+          this.stories = res.data;
+          if (this.stories == "") {
+            this.isHaveResult = false;
+          } else {
+            this.isHaveResult = true;
+          }
+        } else {
+          this.$toast.error("Lỗi tìm kiếm rồi bạn ơi !", {
+            autoClose: 1000,
+          });
+        }
+      } else if (!this.$route.query.type) {
+        const res = await this.Get(
+          `api/Food/GetFoodFromFoodType?foodPlaceId=${this.$route.query.place}&seasonalFoodId=${this.$route.query.season}`,
+          {}
+        );
+        if (res.code == "Ok") {
+          this.stories = res.data;
+          if (this.stories == "") {
+            this.isHaveResult = false;
+          } else {
+            this.isHaveResult = true;
+          }
+        } else {
+          this.$toast.error("Lỗi tìm kiếm rồi bạn ơi !", {
+            autoClose: 1000,
+          });
+        }
+      } else if (!this.$route.query.place) {
+        const res = await this.Get(
+          `api/Food/GetFoodFromFoodType?foodTypeId=${this.$route.query.type}&seasonalFoodId=${this.$route.query.season}`,
+          {}
+        );
+        if (res.code == "Ok") {
+          this.stories = res.data;
+          if (this.stories == "") {
+            this.isHaveResult = false;
+          } else {
+            this.isHaveResult = true;
+          }
+        } else {
+          this.$toast.error("Lỗi tìm kiếm rồi bạn ơi !", {
+            autoClose: 1000,
+          });
+        }
+      } else if (!this.$route.query.season) {
+        const res = await this.Get(
+          `api/Food/GetFoodFromFoodType?foodTypeId=${this.$route.query.type}&foodPlaceId=${this.$route.query.place}`,
+          {}
+        );
+        if (res.code == "Ok") {
+          this.stories = res.data;
+          if (this.stories == "") {
+            this.isHaveResult = false;
+          } else {
+            this.isHaveResult = true;
+          }
+        } else {
+          this.$toast.error("Lỗi tìm kiếm rồi bạn ơi !", {
+            autoClose: 1000,
+          });
+        }
       } else {
-        this.$toast.error(`${data.des}`, {
-          autoClose: 1000,
-        });
+        const res = await this.Get(
+          `api/Food/GetFoodFromFoodType?foodTypeId=${this.$route.query.type}&foodPlaceId=${this.$route.query.place}&&seasonalFoodId=${this.$route.query.season}`,
+          {}
+        );
+        if (res.code == "Ok") {
+          this.stories = res.data;
+          if (this.stories == "") {
+            this.isHaveResult = false;
+          } else {
+            this.isHaveResult = true;
+          }
+        } else {
+          this.$toast.error("Lỗi tìm kiếm rồi bạn ơi !", {
+            autoClose: 1000,
+          });
+        }
       }
+    },
+    checkUser(id) {
+      var userInStorage = JSON.parse(localStorage.getItem("user"));
+      if (id != userInStorage.id) {
+        return "/user";
+      }
+      return "/profile";
     },
     async updateView(foodId) {
       const data = await this.Post(`api/Story/AddView?foodId=${foodId}`, {});
@@ -226,32 +340,6 @@ export default {
 </script>
 
 <style scoped>
-.btn-what-do-you-think {
-  border-radius: 25px;
-  border: 1px solid #f0f2f5;
-  background-color: #f0f2f5;
-  padding: 10px 20px 10px 10px;
-  width: 400px;
-  color: #000;
-}
-
-.btn-what-do-you-think:hover {
-  cursor: pointer;
-  background-color: #e4e6e9;
-  border: 1px solid #e4e6e9;
-}
-
-.btn-detail-story {
-  color: #000;
-  font-size: 18px;
-  border: 0px;
-  background-color: #f0f2f5;
-}
-
-.btn-detail-story:hover {
-  background-color: #e4e6e9;
-}
-
 .star-rating {
   display: inline-block;
   color: gold;

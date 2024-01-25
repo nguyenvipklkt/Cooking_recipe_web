@@ -136,7 +136,7 @@
                               {{ profile.firstName + " " + profile.lastName }}
                             </div>
                             <div style="font-size: 15px">
-                              {{ countDate(story.createdDate) }}
+                              {{ countDate(story.food.createdDate) }}
                             </div>
                           </div>
                         </div>
@@ -145,11 +145,11 @@
                         class="d-flex justify-content-center mb-2"
                         style="font-size: 25px; font-weight: 500"
                       >
-                        {{ story.name }}
+                        {{ story.food.name }}
                       </div>
                       <div class="d-flex justify-content-center mb-2">
                         <img
-                          :src="[formatImage(story.thumbnails)]"
+                          :src="[formatImage(story.food.thumbnails)]"
                           alt=""
                           style="width: 300px; border: 5px solid #fff"
                         />
@@ -158,12 +158,76 @@
                         class="d-flex justify-content-center"
                         style="text-align: center; font-size: 15px"
                       >
-                        {{ story.title }}
+                        {{ story.food.title }}
+                      </div>
+                      <hr />
+                      <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                          <div class="me-3 d-flex align-items-center">
+                            <font-awesome-icon
+                              icon="clock"
+                              style="font-size: 30px"
+                            />
+                          </div>
+                          <div>
+                            <div style="font-size: 13px; font-weight: 600">
+                              Chuẩn bị
+                            </div>
+                            <div>
+                              {{ story.food.preparationTime + " Phút" }}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex">
+                          <div class="me-3 d-flex align-items-center">
+                            <font-awesome-icon
+                              icon="kitchen-set"
+                              style="font-size: 30px"
+                            />
+                          </div>
+                          <div>
+                            <div style="font-size: 13px; font-weight: 600">
+                              Nấu nướng
+                            </div>
+                            <div>{{ story.food.cookingTime + " Phút" }}</div>
+                          </div>
+                        </div>
+                        <div class="d-flex">
+                          <div class="me-3 d-flex align-items-center">
+                            <font-awesome-icon
+                              icon="bowl-food"
+                              style="font-size: 30px"
+                            />
+                          </div>
+                          <div>
+                            <div style="font-size: 13px; font-weight: 600">
+                              Khẩu phần
+                            </div>
+                            <div>{{ story.food.meal + " Người" }}</div>
+                          </div>
+                        </div>
+                        <div class="d-flex">
+                          <div class="me-3 d-flex align-items-center">
+                            <font-awesome-icon
+                              icon="5"
+                              style="font-size: 30px"
+                            />
+                          </div>
+                          <div>
+                            <div style="font-size: 13px; font-weight: 600">
+                              Độ khó
+                            </div>
+                            <div>{{ story.food.levelOfDifficult + "/5" }}</div>
+                          </div>
+                        </div>
                       </div>
                       <hr />
                       <div class="d-flex justify-content-center">
                         <NuxtLink
-                          :to="{ path: '/story', query: { page: story.id } }"
+                          :to="{
+                            path: '/story',
+                            query: { page: story.food.id },
+                          }"
                           class="d-flex align-items-center p-3 btn-detail-story"
                           style="text-decoration: none"
                         >
@@ -173,6 +237,40 @@
                           />
                           <div>Chi tiết bài viết</div>
                         </NuxtLink>
+                        <div
+                          class="ms-4 d-flex align-items-center px-5"
+                          style="background-color: #f0f2f5"
+                        >
+                          <!-- <span
+                            style="user-select: none; font-size: 24px"
+                            :style="'width: ' + story.food.id + 'px;'"
+                            v-for="star in 5"
+                            :key="star"
+                            :class="{
+                              rated: star <= story.point,
+                            }"
+                            >&#9733;</span
+                          > -->
+                          <div class="star-rating">
+                            <span>&star;</span>
+                            <span>&star;</span>
+                            <span>&star;</span>
+                            <span>&star;</span>
+                            <span>&star;</span>
+                            <div
+                              class="star-rating-current"
+                              :style="
+                                'width: ' + (story.point / 5) * 100 + '%;'
+                              "
+                            >
+                              <span>&starf;</span>
+                              <span>&starf;</span>
+                              <span>&starf;</span>
+                              <span>&starf;</span>
+                              <span>&starf;</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -399,5 +497,19 @@ export default {
 
 .btn-detail-story:hover {
   background-color: #e4e6e9;
+}
+
+.star-rating {
+  display: inline-block;
+  color: gold;
+  font-size: 28px;
+  position: relative;
+}
+
+.star-rating-current {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  white-space: nowrap;
 }
 </style>

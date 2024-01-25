@@ -125,7 +125,7 @@
               <button
                 @click="updateView(story.id)"
                 class="d-flex align-items-center p-3 btn-detail-story"
-                style="text-decoration: none"
+                style="text-decoration: none; border: 0"
               >
                 <font-awesome-icon
                   class="me-2"
@@ -133,6 +133,38 @@
                 />
                 <div>Chi tiết bài viết</div>
               </button>
+              <div
+                class="ms-4 d-flex align-items-center px-5"
+                style="background-color: #f0f2f5"
+              >
+                <!-- <span
+                            style="user-select: none; font-size: 24px"
+                            :style="'width: ' + story.food.id + 'px;'"
+                            v-for="star in 5"
+                            :key="star"
+                            :class="{
+                              rated: star <= story.point,
+                            }"
+                            >&#9733;</span
+                          > -->
+                <div class="star-rating">
+                  <span>&star;</span>
+                  <span>&star;</span>
+                  <span>&star;</span>
+                  <span>&star;</span>
+                  <span>&star;</span>
+                  <div
+                    class="star-rating-current"
+                    :style="'width: ' + (story.reviewPoint / 5) * 100 + '%;'"
+                  >
+                    <span>&starf;</span>
+                    <span>&starf;</span>
+                    <span>&starf;</span>
+                    <span>&starf;</span>
+                    <span>&starf;</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -198,4 +230,31 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.star-rating {
+  display: inline-block;
+  color: gold;
+  font-size: 28px;
+  position: relative;
+}
+
+.star-rating-current {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.star-rating {
+  display: inline-block;
+  color: gold;
+  font-size: 28px;
+  position: relative;
+}
+
+.star-rating-current {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+</style>

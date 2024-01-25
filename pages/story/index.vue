@@ -128,6 +128,21 @@
       </div>
     </div>
     <div class="d-flex justify-content-center mt-4 align-items-center">
+      <form v-if="!isReviewPoint">
+        <div class="h4">Hãy đánh giá bài viết này nhé :</div>
+        <div class="d-flex justify-content-center justify-content-center">
+          <span
+            v-for="star in 5"
+            :key="star"
+            @click="rate(star)"
+            :class="{ rated: star <= currentRating }"
+            >&#9733;</span
+          >
+        </div>
+      </form>
+      <div v-else class="h4">Bạn đã đánh giá bài viết này rồi !</div>
+    </div>
+    <div class="d-flex justify-content-center mt-4 align-items-center">
       <form action="" class="d-flex" v-on:submit.prevent="comment()">
         <input
           type="text"
@@ -214,6 +229,7 @@ export default {
     await this.getFoodStepList();
     await this.getUserInf();
     await this.getComment();
+    await this.checkReviewPoint();
   },
   data() {
     return {
@@ -223,6 +239,8 @@ export default {
       user: {},
       content: "",
       commentList: {},
+      isReviewPoint: false,
+      currentRating: 0,
     };
   },
   methods: {
@@ -346,6 +364,46 @@ export default {
       }
       return false;
     },
+    async checkReviewPoint() {
+      const data = await this.Get(
+        `api/ReviewPoint/CheckReviewPoint?foodId=${this.$route.query.page}`,
+        {}
+      );
+      if (data.code == "Ok") {
+        if (data.data) {
+          this.isReviewPoint = true;
+        } else {
+          this.isReviewPoint = false;
+        }
+      } else {
+        this.$toast.error("Check đánh giá thất bại!", {
+          autoClose: 1000,
+        });
+      }
+    },
+    async rate(rating) {
+      this.currentRating = rating;
+      const reviewPointRequest = {
+        foodId: this.$route.query.page,
+        point: this.currentRating,
+      };
+      const data = await this.Post(
+        "api/ReviewPoint/ReviewPoint",
+        reviewPointRequest
+      );
+      if (data.code == "Ok") {
+        this.$toast.success("Đã đánh giá về bài viết này !", {
+          autoClose: 1000,
+        });
+        setTimeout(() => {
+          reloadNuxtApp();
+        }, 1000);
+      } else {
+        this.$toast.error("Đánh giá thất bại !", {
+          autoClose: 2000,
+        });
+      }
+    },
   },
 };
 </script>
@@ -358,5 +416,19 @@ export default {
 .comment-trash:hover {
   background-color: #f2f2f2;
   cursor: pointer;
+}
+
+span {
+  cursor: pointer;
+  font-size: 30px;
+  transition: color 0.3s;
+}
+
+span:hover {
+  color: gold;
+}
+
+.rated {
+  color: gold;
 }
 </style>

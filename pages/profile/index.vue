@@ -148,9 +148,9 @@
                             </div>
                             <div class="d-flex">
                               <div style="font-size: 15px" class="me-2">
-                                {{ countDate(story.createdDate) }}
+                                {{ countDate(story.food.createdDate) }}
                               </div>
-                              <div v-if="story.accessRange == 1">
+                              <div v-if="story.food.accessRange == 1">
                                 <font-awesome-icon icon="fa-solid fa-globe" />
                               </div>
                               <div v-else>
@@ -170,15 +170,17 @@
                             <NuxtLink
                               :to="{
                                 path: '/update-story',
-                                query: { story: story.id },
+                                query: { story: story.food.id },
                               }"
                             >
                               Chỉnh sửa bài viết
                             </NuxtLink>
-                            <a href="#" @click="deleteStory(story.id)"
+                            <a href="#" @click="deleteStory(story.food.id)"
                               >Xoá bài viết</a
                             >
-                            <a href="#" @click="changeStatusStory(story.id)"
+                            <a
+                              href="#"
+                              @click="changeStatusStory(story.food.id)"
                               >Thay đổi truy cập</a
                             >
                           </div>
@@ -188,21 +190,21 @@
                         class="d-flex justify-content-center mb-2"
                         style="font-size: 25px; font-weight: 500"
                       >
-                        {{ story.name }}
+                        {{ story.food.name }}
                       </div>
                       <div class="d-flex justify-content-center mb-2">
                         <video
-                          v-if="story.video"
+                          v-if="story.food.video"
                           width="640"
                           height="360"
-                          :src="[formatImage(story.video)]"
+                          :src="[formatImage(story.food.video)]"
                           controls
                           class="mb-4"
                           type="video/mp4"
                         ></video>
                         <img
                           v-else
-                          :src="[formatImage(story.thumbnails)]"
+                          :src="[formatImage(story.food.thumbnails)]"
                           alt=""
                           style="width: 360px; border: 5px solid #fff"
                         />
@@ -211,7 +213,7 @@
                         class="d-flex justify-content-center"
                         style="text-align: center; font-size: 15px"
                       >
-                        {{ story.title }}
+                        {{ story.food.title }}
                       </div>
                       <hr />
                       <div class="d-flex justify-content-between">
@@ -226,7 +228,9 @@
                             <div style="font-size: 13px; font-weight: 600">
                               Chuẩn bị
                             </div>
-                            <div>{{ story.preparationTime + " Phút" }}</div>
+                            <div>
+                              {{ story.food.preparationTime + " Phút" }}
+                            </div>
                           </div>
                         </div>
                         <div class="d-flex">
@@ -240,7 +244,7 @@
                             <div style="font-size: 13px; font-weight: 600">
                               Nấu nướng
                             </div>
-                            <div>{{ story.cookingTime + " Phút" }}</div>
+                            <div>{{ story.food.cookingTime + " Phút" }}</div>
                           </div>
                         </div>
                         <div class="d-flex">
@@ -254,7 +258,7 @@
                             <div style="font-size: 13px; font-weight: 600">
                               Khẩu phần
                             </div>
-                            <div>{{ story.meal + " Người" }}</div>
+                            <div>{{ story.food.meal + " Người" }}</div>
                           </div>
                         </div>
                         <div class="d-flex">
@@ -268,14 +272,14 @@
                             <div style="font-size: 13px; font-weight: 600">
                               Độ khó
                             </div>
-                            <div>{{ story.levelOfDifficult + "/5" }}</div>
+                            <div>{{ story.food.levelOfDifficult + "/5" }}</div>
                           </div>
                         </div>
                       </div>
                       <hr />
                       <div class="d-flex justify-content-center">
                         <button
-                          @click="updateView(story.id)"
+                          @click="updateView(story.food.id)"
                           class="d-flex align-items-center p-3 btn-detail-story"
                           style="text-decoration: none"
                         >
@@ -285,6 +289,40 @@
                           />
                           <div>Chi tiết bài viết</div>
                         </button>
+                        <div
+                          class="ms-4 d-flex align-items-center px-5"
+                          style="background-color: #f0f2f5"
+                        >
+                          <!-- <span
+                            style="user-select: none; font-size: 24px"
+                            :style="'width: ' + story.food.id + 'px;'"
+                            v-for="star in 5"
+                            :key="star"
+                            :class="{
+                              rated: star <= story.point,
+                            }"
+                            >&#9733;</span
+                          > -->
+                          <div class="star-rating">
+                            <span>&star;</span>
+                            <span>&star;</span>
+                            <span>&star;</span>
+                            <span>&star;</span>
+                            <span>&star;</span>
+                            <div
+                              class="star-rating-current"
+                              :style="
+                                'width: ' + (story.point / 5) * 100 + '%;'
+                              "
+                            >
+                              <span>&starf;</span>
+                              <span>&starf;</span>
+                              <span>&starf;</span>
+                              <span>&starf;</span>
+                              <span>&starf;</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -743,5 +781,19 @@ export default {
   background-color: #e4e6eb;
   border-radius: 8px;
   cursor: pointer;
+}
+
+.star-rating {
+  display: inline-block;
+  color: gold;
+  font-size: 28px;
+  position: relative;
+}
+
+.star-rating-current {
+  position: absolute;
+  top: 0;
+  overflow: hidden;
+  white-space: nowrap;
 }
 </style>

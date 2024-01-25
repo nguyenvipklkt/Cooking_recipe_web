@@ -83,6 +83,7 @@
                       <option value="1">Miền bắc</option>
                       <option value="2">Miền trung</option>
                       <option value="3">Miền nam</option>
+                      <option value="4">Ba miền</option>
                     </select>
                   </div>
                   <div class="d-flex justify-content-center">
@@ -101,6 +102,7 @@
                       <option value="4">Mùa đông</option>
                       <option value="5">Mùa mưa</option>
                       <option value="6">Mùa khô</option>
+                      <option value="7">Mọi mùa</option>
                     </select>
                   </div>
                 </div>
